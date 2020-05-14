@@ -1,0 +1,42 @@
+﻿name: 1.0$(rev:.r)
+pr: none
+trigger:
+  branches:
+    include:
+    - master
+    - develop
+  paths:
+    exclude:
+    - README.md
+    - tf/README.md
+  batch: true
+stages:
+- stage: Build
+  jobs:
+  - template: templates/build-job.yaml
+    parameters:
+      servicename: 'service-name'
+      RestoreBuildProjects: '**/*.sln'
+      BuildConfiguration: 'Release'
+      BuildPlatform: 'any cpu'
+      npm_command: install
+      artifactory_endpoint: Artifactory
+- stage: Release_Stg
+  jobs:
+  - template: templates/deploy-stg.yaml
+    parameters:
+      release: 'Release Notes Go Here - $(Build.BuildNumber)'
+      releasenumber: $(BUILD.BUILDID) was queued because $(BUILD.REASON) by $(BUILD.REQUESTEDFOR)'
+      servicename: 'service-name'
+      svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
+
+- stage: Release_Prd
+  dependsOn: Release_Stg
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  jobs:
+    - template: templates/deploy-prd.yaml
+      parameters:
+        release: 'Release Notes Go Here - $(Build.BuildNumber)'
+        releasenumber: $(BUILD.BUILDID) was queued because $(BUILD.REASON) by $(BUILD.REQUESTEDFOR)'
+        servicename: 'service-name'
+        svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'

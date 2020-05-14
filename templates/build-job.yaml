@@ -1,0 +1,125 @@
+﻿# File: build-job.yaml - Used to build artifacts
+jobs:
+  - job: Build_Deployment_Artifacts
+    pool:
+      vmImage: vs2017-win2016
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Download Source Code'
+      inputs:
+        TargetFolder: '$(build.artifactstagingdirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: tf'
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/tf'
+        artifactName: 'tf'
+    - task: NodeTool@0
+      inputs:
+        versionSpec: 12.13.1
+    - task: Npm@1
+      displayName: 'npm install'
+      inputs:
+        command: ${{parameters.npm_command}}
+        workingDir: $(Build.SourcesDirectory)/code
+        verbose: false
+    - task: webpack@4
+      inputs:
+        webpackCliArguments: '--mode=production'
+        treatErrorsAs: 'errors'
+        treatWarningsAs: 'warnings'
+        workingFolder: '$(Build.SourcesDirectory)/code'
+        webpackCliLocation: '$(Build.SourcesDirectory)/code/node_modules/webpack/bin/webpack.js'
+        statsjsLocation: '$(Build.SourcesDirectory)/code/node_modules/webpack/lib/Stats.js'
+    - script: npm run test-junit
+      displayName: 'Test'
+      workingDirectory: $(Build.SourcesDirectory)/code
+    - script: npm run test-coverage
+      displayName: 'Collect Code Coverage'
+      workingDirectory: $(Build.SourcesDirectory)/code
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: 'JUnit'
+        # Make sure you've changed testResultsFiles to the one below
+        testResultsFiles: '**/TEST-*.xml'
+      displayName: 'Publish Test Results'
+    - task: PublishCodeCoverageResults@1
+      condition: succeededOrFailed()
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Build.SourcesDirectory)/code/coverage/cobertura-coverage.xml'
+      displayName: 'Publish Code Coverage Results'
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'Sonarcloud'
+        organization: 'fairwaymtg'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: '${{Parameters.servicename}}'
+        cliProjectName: '${{Parameters.servicename}}'
+        cliSources: '$(Build.SourcesDirectory)/code'
+        extraProperties: |
+          # Additional properties that will be passed to the scanner,
+          # Put one key=value per line, example:
+          # sonar.exclusions=**/*.bin
+          sonar.language=js
+          sonar.projectKey=${{Parameters.servicename}}
+          sonar.profile=Infosec way Recommended
+          sonar.exclusions=node_modules/**/*
+          sonar.javascript.lcov.reportPaths=code/coverage/lcov.info
+        workingDirectory: '$(Build.SourcesDirectory)'
+    - task: SonarCloudAnalyze@1
+      displayName: 'Run Code Analysis'
+      continueOnError: true
+    - task: SonarCloudPublish@1
+      displayName: 'Publish Quality Gate Result'
+      continueOnError: true
+    - script: dir
+      displayName: 'List directory contents'
+      workingDirectory: $(Build.SourcesDirectory)/code/coverage
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/code/dist/'
+        includeRootFolder: false
+        flattenFolders: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/webpack/$(Build.BuildNumber).zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/webpack/'
+        ArtifactName: ${{Parameters.servicename}}
+      condition: succeededOrFailed()
+    - task: ArtifactoryGenericUpload@1
+      inputs:
+        artifactoryService: 'Artifactory'
+        specSource: 'taskConfiguration'
+        fileSpec: |
+          {
+            "files": [
+              {
+                "pattern": "$(Build.ArtifactStagingDirectory)/webpack/$(Build.BuildNumber).zip",
+                "target": "npm-local/${{Parameters.servicename}}/"
+              }
+            ]
+          }
+        collectBuildInfo: true
+        buildName: '$(Build.DefinitionName)'
+        buildNumber: '$(Build.BuildNumber)'
+        failNoOp: true
+    - task: ArtifactoryPublishBuildInfo@1
+      inputs:
+        artifactoryService: ${{parameters.artifactory_endpoint}}
+        buildName: '$(Build.DefinitionName)'
+        buildNumber: '$(Build.BuildNumber)'
+    - task: JFrog.jfrog-artifactory-vsts-extension.artifactory-xray-scan-task.ArtifactoryXrayScan@1
+      displayName: 'Artifactory Xray Scan'
+      inputs:
+        artifactoryService: Artifactory
+    - task: JFrog.jfrog-artifactory-vsts-extension.artifactory-discard-builds-task.ArtifactoryDiscardBuilds@1
+      displayName: 'Artifactory Discard Builds'
+      inputs:
+        artifactoryService: Artifactory
+        maxBuilds: 10
+        deleteArtifacts: true

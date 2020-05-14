@@ -1,0 +1,87 @@
+﻿﻿jobs:
+  - deployment: Deploy_Web_Stg_Slot
+    pool:
+      vmImage: ubuntu-16.04
+    variables:
+      - name: "environment-name"
+        value: "dev"
+      - group: InfraVar-Dev
+      - name: release
+        value: ${{Parameters.release}} ${{Parameters.releasenumber}}
+      - name: servicename
+        value: ${{Parameters.servicename}}
+      - name: System.Debug
+        value: True
+    environment: dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: |
+                ip=$(curl -s http://ipinfo.io/json | jq '.ip')
+                echo "##vso[task.setvariable variable=ip]$ip"
+              displayName: "Get Azure Build Agent IP Address"
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                downloadType: 'single'
+                artifactName: 'tf'
+                downloadPath: '$(System.ArtifactsDirectory)'
+            - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+              displayName: "Replace tokens in terraform"
+              inputs:
+                rootDirectory: '$(System.ArtifactsDirectory)/tf'
+                targetFiles: |
+                  **/*.tfvars
+                  **/*.tf
+                  **/*.yaml
+                escapeType: none
+                tokenPrefix: "__"
+                tokenSuffix: "__"
+            - script: |
+                terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
+                terraform workspace select $(environment-name) || terraform workspace new $(environment-name)
+                terraform plan -var client_secret="$(AZDO--SUB--CS)"
+                terraform apply -var client_secret="$(AZDO--SUB--CS)" -auto-approve
+              workingDirectory: '$(System.ArtifactsDirectory)/tf'
+              displayName: "Terraform Init & Apply"
+            - task: raul-arrieta.terraform-outputs.terraform-outputs.terraform-outputs@0
+              displayName: "Terraform Outputs"
+              inputs:
+                workingDirectory: '$(System.ArtifactsDirectory)/tf'
+                variablePrefix: "op_"
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                downloadType: 'single'
+                artifactName: '${{Parameters.servicename}}'
+                targetPath: '$(System.ArtifactsDirectory)'
+            - task: AzureFunctionApp@1
+              displayName: "Azure Function App Deploy: ${{Parameters.servicename}}"
+              inputs:
+                azureSubscription: "${{Parameters.svc_conn}}"
+                appType: functionApp
+                appName: "$(OP_FUNCAPP_NAME)"
+                #Uncomment the next lines to deploy to a deployment slot
+                #deployToSlotOrASE: true
+                #slotName: '<Slot name>'
+                #resourceGroupName: '$(OP_FUNCAPPRG_NAME)'
+                package: "$(System.ArtifactsDirectory)/**/*.zip"
+            - task: AzureAppServiceSettings@1
+              displayName: Azure App Service Settings
+              inputs:
+                azureSubscription: "${{Parameters.svc_conn}}"
+                appName: "$(OP_FUNCAPP_NAME)"
+                # To deploy the settings on a slot, provide slot name as below. By default, the settings would be applied to the actual Web App (Production slot)
+                # slotName: staging
+                appSettings: |
+                  [
+                    {
+                      "name": "FUNCTIONS_EXTENSION_VERSION",
+                      "value": "~2",
+                      "slotSetting": false
+                    },
+                    {
+                      "name": "direction",
+                      "value": "in",
+                      "slotSetting": false
+                    }
+                  ]

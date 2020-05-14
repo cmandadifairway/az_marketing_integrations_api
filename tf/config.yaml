@@ -1,0 +1,12 @@
+﻿
+subscipt: infapp
+service: __servicename__
+default_tags:
+  service-product: Loan Functions
+  costcenter: 1070
+  data-classification: Private
+  Owner-email: brian.ruzycki@fairwaymc.com
+  pid: n/a
+  Expiration: n/a
+location: centralus
+locabbrev: cus
