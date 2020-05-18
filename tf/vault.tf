@@ -1,7 +1,7 @@
 ﻿#KeyVault Resource Group
-resource "azurerm_resource_group" "kvrg" {
+data "azurerm_resource_group" "kvrg" {
   name     = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-core"
-  location = local.settings.location
+
 
 
 }
@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "kvrg" {
 resource "azurerm_key_vault" "keyVault" {
   name                     = "kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}"
   location                 = local.settings.location
-  resource_group_name      = azurerm_resource_group.kvrg.name
+  resource_group_name      = data.azurerm_resource_group.kvrg.name
   tenant_id                = azurerm_function_app.service-name.identity.0.tenant_id
   tags                     = local.settings.default_tags
   soft_delete_enabled      = true
