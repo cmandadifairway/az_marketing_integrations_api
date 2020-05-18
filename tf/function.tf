@@ -18,7 +18,8 @@ resource "azurerm_function_app" "service-name" {
   location                  = local.settings.location
   resource_group_name       = azurerm_resource_group.service-name.name
   app_service_plan_id       = azurerm_app_service_plan.service-name.id
-  storage_connection_string = azurerm_storage_account.service-name.primary_connection_string
+  storage_account_name       = azurerm_storage_account.service-name.name
+  storage_account_access_key = azurerm_storage_account.service-name.primary_access_key
   https_only                = "true"
   version                   = "~2"
   identity {
