@@ -16,9 +16,11 @@ resource "azurerm_key_vault" "keyVault" {
   soft_delete_enabled      = true
   purge_protection_enabled = false
   sku_name                 = "standard"
-  tags = merge(
-       local.settings.default_tags,
-       local.settings.tags)
+      tags = merge(
+
+    local.settings.default_tags,
+    local.settings.tags,
+  )
 
   lifecycle {
     ignore_changes = [

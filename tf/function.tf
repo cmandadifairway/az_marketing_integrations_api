@@ -1,9 +1,11 @@
 ﻿resource "azurerm_resource_group" "service-name" {
   name     = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
   location = local.settings.location
-  tags = merge(
-       local.settings.default_tags,
-       local.settings.tags)
+   tags = merge(
+
+    local.settings.default_tags,
+    local.settings.tags,
+  )
 }
 resource "azurerm_app_service_plan" "service-name" {
   name                = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}-plan"
@@ -14,9 +16,11 @@ resource "azurerm_app_service_plan" "service-name" {
     tier = "Dynamic"
     size = "Y1"
   }
-  tags = merge(
-       local.settings.default_tags,
-       local.settings.tags)
+    tags = merge(
+
+    local.settings.default_tags,
+    local.settings.tags,
+  )
 }
 resource "azurerm_function_app" "service-name" {
   name                      = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
@@ -28,8 +32,10 @@ resource "azurerm_function_app" "service-name" {
   https_only                = "true"
   version                   = "~2"
   tags = merge(
-       local.settings.default_tags,
-       local.settings.tags)
+
+    local.settings.default_tags,
+    local.settings.tags,
+  )
   identity {
     type = "SystemAssigned"
   }
