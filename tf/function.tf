@@ -12,6 +12,7 @@ resource "azurerm_app_service_plan" "service-name" {
     tier = "Dynamic"
     size = "Y1"
   }
+  tags     = local.settings.default_tags
 }
 resource "azurerm_function_app" "service-name" {
   name                      = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
@@ -22,6 +23,7 @@ resource "azurerm_function_app" "service-name" {
   storage_account_access_key = azurerm_storage_account.service-name.primary_access_key
   https_only                = "true"
   version                   = "~2"
+  tags     = local.settings.default_tags
   identity {
     type = "SystemAssigned"
   }
