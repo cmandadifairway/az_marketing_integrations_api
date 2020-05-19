@@ -6,5 +6,7 @@
   account_replication_type  = "LRS"
   account_kind              = "StorageV2"
   enable_https_traffic_only = true
-  tags                      = local.settings.default_tags
+  tags = merge(
+    local.settings.default_tags,
+  local.settings.tags)
 }

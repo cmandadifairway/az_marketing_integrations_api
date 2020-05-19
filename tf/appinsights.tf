@@ -8,7 +8,8 @@ resource "azurerm_application_insights" "service-name" {
   resource_group_name         = data.azurerm_resource_group.appinsights.name
   application_type            = "web"
      tags = merge(
-       local.settings.default_tags,)
+       local.settings.default_tags,
+       local.settings.tags)
 }
 
 output "instrumentation_key" {
