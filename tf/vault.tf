@@ -12,7 +12,6 @@ resource "azurerm_key_vault" "keyVault" {
   location                 = local.settings.location
   resource_group_name      = data.azurerm_resource_group.kvrg.name
   tenant_id                = azurerm_function_app.service-name.identity.0.tenant_id
-  tags                     = local.settings.default_tags
   soft_delete_enabled      = true
   purge_protection_enabled = false
   sku_name                 = "standard"
