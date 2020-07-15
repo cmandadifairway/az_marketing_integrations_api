@@ -24,14 +24,10 @@ stages:
       npm_command: ci
       artifactory_endpoint: Artifactory
 
-<<<<<<< HEAD
-- stage: Release_Stg
-=======
 - stage: release_staging
   displayName: Release To Staging
   dependsOn: build
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/develop'))
->>>>>>> master
   jobs:
   - template: templates/deploy-stg.yaml
     parameters:
