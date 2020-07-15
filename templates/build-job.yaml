@@ -3,6 +3,8 @@ jobs:
   - job: Build_Deployment_Artifacts
     pool:
       vmImage: vs2017-win2016
+    variables:
+      npm_config_cache: $(Pipeline.Workspace)/.npm
     steps:
     - task: CopyFiles@2
       displayName: 'Download Source Code'
@@ -16,6 +18,13 @@ jobs:
     - task: NodeTool@0
       inputs:
         versionSpec: 12.13.1
+    - task: Cache@2
+      displayName: Cache npm
+      inputs:
+        key: 'npm | "$(Agent.OS)" | "$(Build.SourcesDirectory)/code/package-lock.json"'
+        restoreKeys: |
+          npm | "$(Agent.OS)"
+        path: $(npm_config_cache)
     - task: Npm@1
       displayName: Install npm Modules
       inputs:
