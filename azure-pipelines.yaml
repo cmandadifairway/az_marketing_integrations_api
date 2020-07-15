@@ -21,6 +21,7 @@ stages:
       BuildPlatform: 'any cpu'
       npm_command: install
       artifactory_endpoint: Artifactory
+
 - stage: Release_Stg
   jobs:
   - template: templates/deploy-stg.yaml
