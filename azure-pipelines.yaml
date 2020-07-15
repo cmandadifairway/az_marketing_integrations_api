@@ -5,13 +5,15 @@ trigger:
     include:
     - master
     - develop
+    - feature/*
   paths:
     exclude:
     - README.md
     - tf/README.md
   batch: true
 stages:
-- stage: Build
+- stage: build
+  displayName: Build, Analyze, and Publish Artifacts
   jobs:
   - template: templates/build-job.yaml
     parameters:
@@ -19,10 +21,17 @@ stages:
       RestoreBuildProjects: '**/*.sln'
       BuildConfiguration: 'Release'
       BuildPlatform: 'any cpu'
-      npm_command: install
+      npm_command: ci
       artifactory_endpoint: Artifactory
 
+<<<<<<< HEAD
 - stage: Release_Stg
+=======
+- stage: release_staging
+  displayName: Release To Staging
+  dependsOn: build
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/develop'))
+>>>>>>> master
   jobs:
   - template: templates/deploy-stg.yaml
     parameters:
@@ -31,8 +40,9 @@ stages:
       servicename: 'service-name'
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
 
-- stage: Release_Prd
-  dependsOn: Release_Stg
+- stage: release_prod
+  displayName: Release To Prod
+  dependsOn: build
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
     - template: templates/deploy-prd.yaml
