@@ -19,7 +19,7 @@ stages:
       RestoreBuildProjects: '**/*.sln'
       BuildConfiguration: 'Release'
       BuildPlatform: 'any cpu'
-      npm_command: install
+      npm_command: ci
       artifactory_endpoint: Artifactory
 - stage: Release_Stg
   jobs:

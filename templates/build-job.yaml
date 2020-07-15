@@ -17,7 +17,7 @@ jobs:
       inputs:
         versionSpec: 12.13.1
     - task: Npm@1
-      displayName: 'npm install'
+      displayName: Install npm Modules
       inputs:
         command: ${{parameters.npm_command}}
         workingDir: $(Build.SourcesDirectory)/code
