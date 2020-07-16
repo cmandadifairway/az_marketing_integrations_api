@@ -27,7 +27,7 @@ stages:
 - stage: release_staging
   displayName: Release To Staging
   dependsOn: build
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/develop'))
+  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/master')))
   jobs:
   - template: templates/deploy-stg.yaml
     parameters:
@@ -38,7 +38,7 @@ stages:
 
 - stage: release_prod
   displayName: Release To Prod
-  dependsOn: build
+  dependsOn: release_staging
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
     - template: templates/deploy-prd.yaml
