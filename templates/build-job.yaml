@@ -64,15 +64,15 @@ jobs:
         organization: 'fairwaymtg'
         scannerMode: 'CLI'
         configMode: 'manual'
-        cliProjectKey: 'fwy-${{Parameters.servicename}}'
-        cliProjectName: 'fwy-${{Parameters.servicename}}'
+        cliProjectKey: '$(Build.Repository.Name)'
+        cliProjectName: '$(Build.Repository.Name)'
         cliSources: '$(Build.SourcesDirectory)/code'
         extraProperties: |
           # Additional properties that will be passed to the scanner,
           # Put one key=value per line, example:
           # sonar.exclusions=**/*.bin
           sonar.language=js
-          sonar.projectKey=fwy-${{Parameters.servicename}}
+          sonar.projectKey=$(Build.Repository.Name)
           sonar.profile=Infosec way Recommended
           sonar.exclusions=node_modules/**/*
           sonar.javascript.lcov.reportPaths=code/coverage/lcov.info
