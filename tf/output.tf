@@ -1,4 +1,4 @@
-﻿output "FUNCAPP_NAME" {
+output "FUNCAPP_NAME" {
   description = "The name of the created web app."
   value       = azurerm_function_app.service-name.name
 }
