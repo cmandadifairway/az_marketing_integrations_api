@@ -1,4 +1,4 @@
-﻿# Backend Configuration - Storage Account and Authentication
+# Backend Configuration - Storage Account and Authentication
 # For specifying Storage Account and storage account access key, use "
 # -backend-config="storage_account_name=<value> -backend-config="access_key=<value>" at terraform init as below.
 # terraform init -backend-config="access_key=<value>"

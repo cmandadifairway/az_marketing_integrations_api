@@ -1,6 +1,6 @@
-﻿#KeyVault Resource Group
+#KeyVault Resource Group
 data "azurerm_resource_group" "kvrg" {
-  name     = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-core"
+  name = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-core"
 
 
 
@@ -15,7 +15,7 @@ resource "azurerm_key_vault" "keyVault" {
   soft_delete_enabled      = true
   purge_protection_enabled = false
   sku_name                 = "standard"
-      tags = merge(
+  tags = merge(
 
     local.settings.default_tags,
     local.settings.tags,

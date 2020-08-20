@@ -38,6 +38,7 @@
             - script: |
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
                 terraform workspace select $(environment-name) || terraform workspace new $(environment-name)
+                terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
                 terraform plan -var client_secret="$(AZDO--SUB--CS)"
                 terraform apply -var client_secret="$(AZDO--SUB--CS)" -auto-approve
               workingDirectory: '$(System.ArtifactsDirectory)/tf'
