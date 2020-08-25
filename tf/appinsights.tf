@@ -1,4 +1,4 @@
-﻿data "azurerm_resource_group" "appinsights" {
+data "azurerm_resource_group" "appinsights" {
   name = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-appinsights"
 }
 

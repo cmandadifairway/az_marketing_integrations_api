@@ -1,7 +1,7 @@
-﻿resource "azurerm_resource_group" "service-name" {
+resource "azurerm_resource_group" "service-name" {
   name     = "rg-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
   location = local.settings.location
-   tags = merge(
+  tags = merge(
 
     local.settings.default_tags,
     local.settings.tags,
@@ -16,21 +16,21 @@ resource "azurerm_app_service_plan" "service-name" {
     tier = "Dynamic"
     size = "Y1"
   }
-    tags = merge(
+  tags = merge(
 
     local.settings.default_tags,
     local.settings.tags,
   )
 }
 resource "azurerm_function_app" "service-name" {
-  name                      = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
-  location                  = local.settings.location
-  resource_group_name       = azurerm_resource_group.service-name.name
-  app_service_plan_id       = azurerm_app_service_plan.service-name.id
+  name                       = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}"
+  location                   = local.settings.location
+  resource_group_name        = azurerm_resource_group.service-name.name
+  app_service_plan_id        = azurerm_app_service_plan.service-name.id
   storage_account_name       = azurerm_storage_account.service-name.name
   storage_account_access_key = azurerm_storage_account.service-name.primary_access_key
-  https_only                = "true"
-  version                   = "~2"
+  https_only                 = "true"
+  version                    = "~2"
   tags = merge(
 
     local.settings.default_tags,
