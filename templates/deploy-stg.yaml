@@ -10,8 +10,6 @@
         value: ${{Parameters.release}} ${{Parameters.releasenumber}}
       - name: servicename
         value: ${{Parameters.servicename}}
-      - name: System.Debug
-        value: True
     environment: dev
     strategy:
       runOnce:
