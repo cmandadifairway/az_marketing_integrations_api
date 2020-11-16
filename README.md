@@ -1,4 +1,4 @@
-Azure DevOPS .NET Core Pipeline
+Azure DevOPS Node Pipeline
 
 Instructions:
 
