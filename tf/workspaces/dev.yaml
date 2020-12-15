@@ -1,4 +1,5 @@
 ﻿environment: dev
+loglevel: DEBUG
 subscription_id: 6213e05a-d0ed-4bcb-8ba9-e7c32d78b201
 spn_id: 54f58b4a-bf74-411d-9372-279fcdb5f17a
 spn_oid: 14863280-33ca-4fae-a8bb-2d35b0dc3142

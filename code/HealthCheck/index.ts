@@ -83,6 +83,9 @@ const httpTrigger: AzureFunction =  async function contextPropagatingHttpTrigger
   const correlationContext = appInsights.startOperation(context, req);
   // Wrap the Function runtime with correlationContext
   return appInsights.wrapWithCorrelationContext(async () => {
+    appInsightClient.context.tags[appInsightClient.context.keys.cloudRole] = process.env["WEBSITE_SITE_NAME"];
+    //set the name of funtion to define the operationName
+    appInsightClient.context.tags[appInsightClient.context.keys.operationName] = "HealthCheck";
       const startTime = Date.now(); // Start trackRequest timer
       appInsightClient.trackTrace({message:`lets start the correlation - 
           OperationParentId::  ${correlationContext.operation.parentId} 

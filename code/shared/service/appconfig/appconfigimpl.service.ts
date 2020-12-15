@@ -42,7 +42,7 @@ export class AppConfigServiceImpl implements AppConfigService {
   }
   private async getLocalConfiguration(configKey: string): Promise<string> {
       const configurationValue: string = process.env[configKey];
-      this.logger.info(`From AppConfigServiceImpl getConfiguration:: 
+      this.logger.info(`From AppConfigServiceImpl getLocalConfiguration:: 
       config key - ${configKey}, config Value - ${configurationValue}`);
       return configurationValue;
   }

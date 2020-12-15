@@ -48,5 +48,7 @@ resource "azurerm_function_app" "service-name" {
     "WEBSITE_NODE_DEFAULT_VERSION"          = "12.13.0"
     "SCM_ZIPDEPLOY_DONOT_PRESERVE_FILETIME" = "1"
     "WEBSITE_RUN_FROM_PACKAGE"              = "1"
+    "LOG_LEVEL"                             = local.settings.loglevel
+    "environment"                           = local.settings.environment
   }
 }
