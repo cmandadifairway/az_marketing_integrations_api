@@ -10,6 +10,9 @@ What we get out of this template
 8) Inversify integration for inversion of control (IoC) container for TypeScript and JavaScript apps.
 9) Webpack configuration.
 
+NOTE:- HealthCheck URL is just a base url. Please change that to project specific.
+Ex-v1/health-check needs to be change to <<Project_base_Path>>/v1/health-check -> wires-bmo/v1/health-check
+
 Please refer below confluence links for more details.
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/470089733/Setting+up+Azure+Functions+with+NodeJS
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/483721231/Microservices+Architecture
