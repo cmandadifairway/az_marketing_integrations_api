@@ -1,5 +1,5 @@
 
-import httpTrigger from "./index";
+import {healthCheck} from "./index";
 import {ContextMock} from "../testing/mock/ContextMock.model";
 import {HttpRequestMock} from "../testing/mock/HttpRequestMock.model";
 import { Context,Logger } from "@azure/functions";
@@ -68,7 +68,7 @@ describe("test heatlCheck function",()=>{
         context.res={};
         context.res.headers={};
         const httpReq=new HttpRequestMock();
-        await httpTrigger(context, httpReq);
+        await healthCheck(context, httpReq);
         context.res.status=200;
         expect(context.res.status).toEqual(200);
     });
