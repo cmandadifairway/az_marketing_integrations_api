@@ -2,9 +2,6 @@ import "reflect-metadata";
 import * as appInsights from "applicationinsights";
 appInsights.setup()// assuming ikey is in env var
     .setAutoDependencyCorrelation(true,true)
-    .setAutoCollectRequests(true)
-    .setAutoCollectPerformance(true)
-    .setAutoCollectExceptions(true)
     .setAutoCollectDependencies(true)
     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
     .start();
@@ -27,7 +24,7 @@ const appConfigService: AppConfigService = container.get<
   AppConfigService
 >(TYPES.AppConfigService);
 
-const healthCheck: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const healthCheck: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   const logger = container.get<CustomLogger>(TYPES.CustomLogger);
   logger.info("Health Check Request started.");
   const responseModel = new ResponseModel();
@@ -78,7 +75,7 @@ const prepareResponse = (context: Context, responseModel: ResponseModel): void =
 
 };
 
-const httpTrigger: AzureFunction =  async function contextPropagatingHttpTrigger(context, req) {
+export const httpTrigger: AzureFunction =  async function contextPropagatingHttpTrigger(context, req) {
   // Start an AI Correlation Context using the provided Function context
   const correlationContext = appInsights.startOperation(context, req);
   // Wrap the Function runtime with correlationContext
@@ -107,4 +104,3 @@ const httpTrigger: AzureFunction =  async function contextPropagatingHttpTrigger
       appInsights.defaultClient.flush();
   }, correlationContext)();
 };
-export default httpTrigger;

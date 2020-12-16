@@ -14,5 +14,6 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/HealthCheck/index.js"
+  "scriptFile": "../dist/HealthCheck/index.js",
+  "entryPoint": "httpTrigger"
 }
