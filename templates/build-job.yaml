@@ -83,6 +83,11 @@ jobs:
     - task: SonarCloudPublish@1
       displayName: 'Publish Quality Gate Result'
       continueOnError: true
+
+    - task: sonarcloud-buildbreaker@2
+      inputs:
+        SonarCloud: 'Sonarcloud'
+        organization: 'fairwaymtg'
     - script: dir
       displayName: 'List directory contents'
       workingDirectory: $(Build.SourcesDirectory)/code/coverage
