@@ -13,6 +13,20 @@ What we get out of this template
 NOTE:- HealthCheck URL is just a base url. Please change that to project specific.
 Ex-v1/health-check needs to be change to <<Project_base_Path>>/v1/health-check -> wires-bmo/v1/health-check
 
+Add below enteries to local.settings.json file to get functionapp up and running
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "FUNCTIONS_V2_COMPATIBILITY_MODE": "true",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "123-345",
+    "environment":"local",
+    "LOG_LEVEL": "DEBUG"
+  }
+}
+
+
+
 Please refer below confluence links for more details.
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/470089733/Setting+up+Azure+Functions+with+NodeJS
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/483721231/Microservices+Architecture
