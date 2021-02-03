@@ -1,4 +1,4 @@
-﻿resource "azurerm_storage_account" "service-name" {
+resource "azurerm_storage_account" "service-name" {
   name                      = "sainfapp${local.settings.environment}${local.settings.locabbrev}${local.settings.service}"
   resource_group_name       = azurerm_resource_group.service-name.name
   location                  = local.settings.location

@@ -28,6 +28,5 @@ provider "azurerm" {
   client_id       = local.settings.spn_id
   client_secret   = var.client_secret
   tenant_id       = "a79a9d63-7f9b-498d-adff-e17197fb1575"
-  version         = "<= 2.9.0"
   features {}
 }
