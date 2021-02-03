@@ -13,6 +13,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
    },
-  "exclude": ["node_modules","testing", "**/*.test.ts","**/*.spec.ts"]
+  "exclude": ["node_modules"]
   
 }
