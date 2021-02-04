@@ -51,6 +51,9 @@ resource "azurerm_function_app" "service-name" {
     "LOG_LEVEL"                             = local.settings.loglevel
     "environment"                           = local.settings.environment
   }
+  site_config {
+    scm_type = "VSTSRM"
+  }
   lifecycle {
     ignore_changes = [
       site_config["scm_type"]
