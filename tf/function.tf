@@ -41,7 +41,7 @@ resource "azurerm_function_app" "service-name" {
   }
   app_settings = {
     "FUNCTIONS_WORKER_RUNTIME"              = "node"
-    "APPINSIGHTS_INSTRUMENTATIONKEY"        = "${azurerm_application_insights.service-name.instrumentation_key}",
+    "APPINSIGHTS_INSTRUMENTATIONKEY"        = azurerm_application_insights.service-name.instrumentation_key
     "FUNCTIONS_EXTENSION_VERSION"           = "~3"
     "KEY_VAULT_URL"                         = "https://kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}.vault.azure.net/"
     "FUNCTIONS_V2_COMPATIBILITY_MODE"       = "true"
