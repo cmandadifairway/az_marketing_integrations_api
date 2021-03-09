@@ -6,6 +6,7 @@ resource "azurerm_storage_account" "service-name" {
   account_replication_type  = "LRS"
   account_kind              = "StorageV2"
   enable_https_traffic_only = true
+  min_tls_version           = "TLS1_2"
   tags = merge(
 
     local.settings.default_tags,
