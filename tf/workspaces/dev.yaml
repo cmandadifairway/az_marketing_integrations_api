@@ -3,6 +3,8 @@ loglevel: DEBUG
 subscription_id: 6213e05a-d0ed-4bcb-8ba9-e7c32d78b201
 spn_id: 54f58b4a-bf74-411d-9372-279fcdb5f17a
 spn_oid: 14863280-33ca-4fae-a8bb-2d35b0dc3142
+opsadmin_oid: 1d4ef737-80e5-4513-9189-e914e0945c04
+opsengineer_oid: f1bd7329-d41c-4c19-a9da-0291b0d188ff
 tags:
   pid: n/a
   Expiration: n/a

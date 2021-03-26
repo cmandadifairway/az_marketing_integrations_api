@@ -5,8 +5,18 @@ default_tags:
   service-product: Loan Functions
   costcenter: 1070
   data-classification: Private
-  Owner-email: brian.ruzycki@fairwaymc.com
+  Owner-email: username@fairwaymc.com
   pid: n/a
   Expiration: n/a
 location: centralus
 locabbrev: cus
+ip_restrictions:
+  - 209.163.181.85/32 #Citrix Colo
+  - 209.163.181.66/30 #Prod Colo
+  - 4.14.128.2/30 #Prod Marsh
+  - 97.105.87.2/30 #DR Marsh
+  - 74.116.196.66/30 #DR Citrix
+  - 38.68.11.40/32 #DR COLO
+  - 38.68.11.2/32 #VPN
+  - 4.17.92.2/32 #VPN
+  - 208.184.31.194/32 #VPN

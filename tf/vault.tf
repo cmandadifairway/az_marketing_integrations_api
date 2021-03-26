@@ -8,13 +8,13 @@ data "azurerm_resource_group" "kvrg" {
 
 #Creating KeyVault
 resource "azurerm_key_vault" "keyVault" {
-  name                     = "kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}"
-  location                 = local.settings.location
-  resource_group_name      = data.azurerm_resource_group.kvrg.name
-  tenant_id                = azurerm_function_app.service-name.identity.0.tenant_id
-  soft_delete_enabled      = true
-  purge_protection_enabled = false
-  sku_name                 = "standard"
+  name                       = "kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}"
+  location                   = local.settings.location
+  resource_group_name        = data.azurerm_resource_group.kvrg.name
+  tenant_id                  = azurerm_function_app.service-name.identity.0.tenant_id
+  soft_delete_retention_days = 7
+  purge_protection_enabled   = false
+  sku_name                   = "standard"
   tags = merge(
 
     local.settings.default_tags,
@@ -47,6 +47,33 @@ resource "azurerm_key_vault_access_policy" "spnkeyvaultpolicy" {
 
   tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
   object_id = local.settings.spn_oid
+
+  secret_permissions = [
+    "get",
+    "list",
+    "set",
+    "delete"
+  ]
+}
+resource "azurerm_key_vault_access_policy" "azureadmins" {
+  key_vault_id = azurerm_key_vault.keyVault.id
+
+  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
+  object_id = local.settings.opsadmin_oid
+
+  secret_permissions = [
+    "get",
+    "list",
+    "set",
+    "delete"
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "azureengineers" {
+  key_vault_id = azurerm_key_vault.keyVault.id
+
+  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
+  object_id = local.settings.opsengineer_oid
 
   secret_permissions = [
     "get",

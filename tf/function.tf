@@ -53,6 +53,12 @@ resource "azurerm_function_app" "service-name" {
   }
   site_config {
     scm_type = "VSTSRM"
+    # dynamic "ip_restriction" {
+    #   for_each = local.settings.ip_restrictions
+    #   content {
+    #     ip_address = ip_restriction.value
+    #   }
+    # }
   }
   lifecycle {
     ignore_changes = [app_settings["WEBSITE_RUN_FROM_PACKAGE"]]
