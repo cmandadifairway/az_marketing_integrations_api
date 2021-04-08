@@ -88,9 +88,14 @@ jobs:
       inputs:
         SonarCloud: 'Sonarcloud'
         organization: 'fairwaymtg'
-    - script: dir
-      displayName: 'List directory contents'
-      workingDirectory: $(Build.SourcesDirectory)/code/coverage
+    - task: Snyk.snyk-security-scan.custom-build-release-task.SnykSecurityScan@0
+      displayName: 'Snyk scan for open source vulnerabilities'
+      inputs:
+        serviceConnectionEndpoint: Snyk
+        targetFile: '$(Build.SourcesDirectory)/code/package.json'
+        projectName: '$(Build.Repository.Name)'
+        organization: 'fairway-independent-mortgage-corporation'
+        failOnIssues: true
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/code/dist/'
