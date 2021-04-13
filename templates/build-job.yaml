@@ -31,14 +31,9 @@ jobs:
         command: ${{parameters.npm_command}}
         workingDir: $(Build.SourcesDirectory)/code
         verbose: false
-    - task: webpack@4
-      inputs:
-        webpackCliArguments: '--mode=production'
-        treatErrorsAs: 'errors'
-        treatWarningsAs: 'warnings'
-        workingFolder: '$(Build.SourcesDirectory)/code'
-        webpackCliLocation: '$(Build.SourcesDirectory)/code/node_modules/webpack/bin/webpack.js'
-        statsjsLocation: '$(Build.SourcesDirectory)/code/node_modules/webpack/lib/Stats.js'
+    - script: npm run build:prod
+      displayName: 'Webpack'
+      workingDirectory: $(Build.SourcesDirectory)/code
     - script: npm run test-junit
       displayName: 'Test'
       workingDirectory: $(Build.SourcesDirectory)/code

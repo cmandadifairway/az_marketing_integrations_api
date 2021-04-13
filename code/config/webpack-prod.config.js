@@ -10,11 +10,14 @@ module.exports = {
     libraryTarget: 'commonjs' // IMPORTANT!
   },
   plugins: [
-    new CopyPlugin([
-      { from: '*/function.json', to: '../' },
+    new CopyPlugin({
+      patterns:[
+        { from: '*/function.json', to: '../' },
       { from: 'host.json', to: '../'},
       { from: 'package.json', to: '../'},
       { from: 'proxies.json', to: '../'}
-    ])
+      ]
+      
+})
   ]
 };
