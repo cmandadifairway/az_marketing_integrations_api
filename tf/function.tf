@@ -30,7 +30,7 @@ resource "azurerm_function_app" "service-name" {
   storage_account_name       = azurerm_storage_account.service-name.name
   storage_account_access_key = azurerm_storage_account.service-name.primary_access_key
   https_only                 = "true"
-  version                    = "~2"
+  version                    = "~3"
   tags = merge(
 
     local.settings.default_tags,
@@ -52,7 +52,8 @@ resource "azurerm_function_app" "service-name" {
     "environment"                           = local.settings.environment
   }
   site_config {
-    scm_type = "VSTSRM"
+    scm_type   = "VSTSRM"
+    ftps_state = "Disabled"
     # dynamic "ip_restriction" {
     #   for_each = local.settings.ip_restrictions
     #   content {

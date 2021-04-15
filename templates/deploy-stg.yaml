@@ -64,23 +64,3 @@
                 #slotName: '<Slot name>'
                 #resourceGroupName: '$(OP_FUNCAPPRG_NAME)'
                 package: "$(System.ArtifactsDirectory)/**/*.zip"
-            - task: AzureAppServiceSettings@1
-              displayName: Azure App Service Settings
-              inputs:
-                azureSubscription: "${{Parameters.svc_conn}}"
-                appName: "$(OP_FUNCAPP_NAME)"
-                # To deploy the settings on a slot, provide slot name as below. By default, the settings would be applied to the actual Web App (Production slot)
-                # slotName: staging
-                appSettings: |
-                  [
-                    {
-                      "name": "FUNCTIONS_EXTENSION_VERSION",
-                      "value": "~3",
-                      "slotSetting": false
-                    },
-                    {
-                      "name": "direction",
-                      "value": "in",
-                      "slotSetting": false
-                    }
-                  ]
