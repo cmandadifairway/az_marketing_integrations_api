@@ -7,6 +7,7 @@ resource "azurerm_storage_account" "service-name" {
   account_kind              = "StorageV2"
   enable_https_traffic_only = true
   min_tls_version           = "TLS1_2"
+  allow_blob_public_access  = false
   tags = merge(
 
     local.settings.default_tags,
