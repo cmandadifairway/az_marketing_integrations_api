@@ -13,11 +13,3 @@ resource "azurerm_application_insights" "service-name" {
     local.settings.tags,
   )
 }
-
-output "instrumentation_key" {
-  value = azurerm_application_insights.service-name.instrumentation_key
-}
-
-output "app_id" {
-  value = azurerm_application_insights.service-name.app_id
-}
