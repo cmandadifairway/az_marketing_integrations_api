@@ -18,32 +18,31 @@ stages:
   - template: templates/build-job.yaml
     parameters:
       servicename: 'service-name'
-      RestoreBuildProjects: '**/*.sln'
-      BuildConfiguration: 'Release'
-      BuildPlatform: 'any cpu'
       npm_command: ci
       artifactory_endpoint: Artifactory
 
-- stage: release_staging
-  displayName: Release To Staging
+- stage: Release_Development
+  displayName: Release To Development
   dependsOn: build
   condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/master')))
   jobs:
-  - template: templates/deploy-stg.yaml
+  - template: templates/deploy.yaml
     parameters:
-      release: 'Release Notes Go Here - $(Build.BuildNumber)'
-      releasenumber: $(BUILD.BUILDID) was queued because $(BUILD.REASON) by $(BUILD.REQUESTEDFOR)'
+      job_name: Deploy_Dev
       servicename: 'service-name'
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
+      env: dev
+      group: InfraVar-Dev
 
-- stage: release_prod
-  displayName: Release To Prod
-  dependsOn: release_staging
+- stage: Release_Production
+  displayName: Release To Production
+  dependsOn: Release_Development
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
-    - template: templates/deploy-prd.yaml
+    - template: templates/deploy.yaml
       parameters:
-        release: 'Release Notes Go Here - $(Build.BuildNumber)'
-        releasenumber: $(BUILD.BUILDID) was queued because $(BUILD.REASON) by $(BUILD.REQUESTEDFOR)'
+        job_name: Deploy_Prod
         servicename: 'service-name'
         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
+        env: prd
+        group: InfraVar-Prd

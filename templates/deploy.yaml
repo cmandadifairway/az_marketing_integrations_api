@@ -1,20 +1,15 @@
 ﻿ jobs:
-  - deployment: Deploy_Web_Prd_Slot
+  - deployment: ${{Parameters.job_name}}
     pool:
       vmImage: ubuntu-16.04
     variables:
-      - name: 'environment-name'
-        value: 'prd'
-      - group: InfraVar-Prd
-      - name: release
-        value: ${{Parameters.release}} ${{Parameters.releasenumber}}
-      - name: servicename
-        value: ${{Parameters.servicename}}
-    environment: prd
+      - group: ${{Parameters.group}}
+    environment: ${{Parameters.env}}
     strategy:
       runOnce:
         deploy:
           steps:
+            - checkout: none
             - script: |
                 ip=$(curl -s http://ipinfo.io/json | jq '.ip')
                 echo "##vso[task.setvariable variable=ip]$ip"
@@ -37,7 +32,7 @@
                 tokenSuffix: "__"
             - script: |
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
-                terraform workspace select $(environment-name) || terraform workspace new $(environment-name)
+                terraform workspace select ${{Parameters.env}} || terraform workspace new ${{Parameters.env}}
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
                 terraform plan -var client_secret="$(AZDO--SUB--CS)"
                 terraform apply -var client_secret="$(AZDO--SUB--CS)" -auto-approve
