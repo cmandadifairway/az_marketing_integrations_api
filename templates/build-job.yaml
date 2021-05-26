@@ -2,7 +2,7 @@
 jobs:
   - job: Build_Deployment_Artifacts
     pool:
-      vmImage: vs2017-win2016
+      vmImage: windows-latest
     variables:
       npm_config_cache: $(Pipeline.Workspace)/.npm
     steps:

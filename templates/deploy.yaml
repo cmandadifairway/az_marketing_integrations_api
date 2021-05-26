@@ -1,7 +1,7 @@
 ﻿ jobs:
   - deployment: ${{Parameters.job_name}}
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     variables:
       - group: ${{Parameters.group}}
     environment: ${{Parameters.env}}
