@@ -11,6 +11,7 @@ tags:
   Environment: Development
 location: centralus
 locabbrev: cus
+rbac_enabled: 1
 ip_restrictions:
   - 209.163.181.85/32 #Citrix Colo
   - 209.163.181.66/30 #Prod Colo

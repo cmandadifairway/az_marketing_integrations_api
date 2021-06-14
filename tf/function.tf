@@ -7,6 +7,14 @@ resource "azurerm_resource_group" "service-name" {
     local.settings.tags,
   )
 }
+
+resource "azurerm_role_assignment" "developers_contributor" {
+  count                = local.settings.rbac_enabled
+  scope                = azurerm_resource_group.service-name.id
+  role_definition_name = "Contributor"
+  principal_id         = "f450603d-5a3e-44b6-ad47-5a55ead40431"
+}
+
 resource "azurerm_app_service_plan" "service-name" {
   name                = "fn-fim-${local.settings.subscipt}-${local.settings.environment}-${local.settings.locabbrev}-${local.settings.service}-plan"
   location            = local.settings.location
