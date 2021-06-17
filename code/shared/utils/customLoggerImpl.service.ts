@@ -2,9 +2,7 @@ import "reflect-metadata";
 
 import { CustomLogger } from "./customLogger.service";
 import { injectable } from "inversify";
-
 import * as appInsights from "applicationinsights";
-import {Context } from "@azure/functions";
 import { SeverityLevel } from "applicationinsights/out/Declarations/Contracts";
 import { BaseError } from "../model/baseError.model";
 import { classToPlain } from "class-transformer";
@@ -12,6 +10,7 @@ import { classToPlain } from "class-transformer";
 
 @injectable()
  export class CustomLoggerImpl implements CustomLogger{
+      private readonly env=process.env["environment"];
       private readonly client: appInsights.TelemetryClient = appInsights.defaultClient;
       private readonly LogLevelMap:Map<string,number[]>=new Map([
         ["DEBUG",[SeverityLevel.Verbose,SeverityLevel.Information,SeverityLevel.Warning,SeverityLevel.Error,SeverityLevel.Critical]],
@@ -31,11 +30,13 @@ import { classToPlain } from "class-transformer";
    async error(message: string, error: Error): Promise<void> {
       message=await this.createDetailedMsg(message, error);
       this.logMessage(message,SeverityLevel.Error);
+      this.trackException(error,SeverityLevel.Error);
        
    }
     async critical(message: string, error: Error): Promise<void> {
       message=await this.createDetailedMsg(message, error);
       this.logMessage(message,SeverityLevel.Critical);
+      this.trackException(error,SeverityLevel.Critical);
     }
 
     private async createDetailedMsg(message:string,error:Error): Promise<string>{
@@ -50,21 +51,23 @@ import { classToPlain } from "class-transformer";
       if(errorDetails){
         message=`message - ${message} , errordetails -${errorDetails}
         and error stack trace is ${error.stack}`;
-      }
+      }else{
+		  message=`message - ${message} ,
+		  and error stack trace is ${error.stack}`;
+	  }
       return message;
     }
     private async logMessage(message: string,severity:SeverityLevel): Promise<void>{
-      const env=process.env["environment"];
       const isFilterRequired=await this.filterTrace(severity)
       if(!isFilterRequired){
-        if(env==="local"){
+        if(this.env==="local"){
           console.log(`${message}`);
         }else{
             this.client.trackTrace({ 
               message: `${message} `, 
               severity,
               properties: { 
-                env ,
+                "environment":this.env ,
                 "APPINFO":"APPINFO"
               }
             });
@@ -74,12 +77,19 @@ import { classToPlain } from "class-transformer";
   }
 
    private async filterTrace (severity:SeverityLevel): Promise<boolean> {
-    const loglevel=process.env["LOG_LEVEL"];
+    let loglevel=process.env["LOG_LEVEL"];
+    if(!loglevel){
+      loglevel="ERROR";
+    }
     if (loglevel && this.LogLevelMap.get(loglevel).includes(severity)) {
         return false;
     }
   
     return true;
-  };
-
+  }
+  private async trackException(error:Error,severity:SeverityLevel): Promise<void>{
+    if(this.env!=="local"){
+        this.client.trackException({exception:error,severity})
+      }
+    }
 }
