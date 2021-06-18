@@ -9,6 +9,13 @@ import {
   import { TYPES } from "../../inversify/types";
   import { CustomLogger } from "../../utils/customLogger.service";
   import { ErrorHandlerService } from "../exception/errorHandler.service";
+/*
+* This class will help to get the properties from app config.
+* app config endpoints needs to be configured in app settings and ManagedIdentity permission should be provided to connect.
+* Contact cloudinfra@fairwaymc.com /VeronicaP@fairwaymc.com to have primary and secondary end points configured in function app settings.
+* Ex- For global - global-config-endpoint,global-config-endpoint-secondary
+* For project specific - app-config-endpoint ,app-config-endpoint-secondary
+*/
   @injectable()
   export class AppConfigServiceImpl implements AppConfigService {
 	private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
