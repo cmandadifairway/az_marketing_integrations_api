@@ -1,89 +1,58 @@
-import {
-	AppConfigurationClient,
-	GetConfigurationSettingResponse,
-  } from "@azure/app-configuration";
-  import { ManagedIdentityCredential } from "@azure/identity";
-  import { AppConfigService } from "./appconfig.service";
-  import { injectable } from "inversify";
-  import  container  from "../../../inversify.config";
-  import { TYPES } from "../../inversify/types";
-  import { CustomLogger } from "../../utils/customLogger.service";
-  import { ErrorHandlerService } from "../exception/errorHandler.service";
+import { ManagedIdentityCredential, DefaultAzureCredential } from "@azure/identity";
+import { injectable } from "inversify";
+import container from "../../../inversify.config";
+import { TYPES } from "../../inversify/types";
+import { CustomLogger } from "../../utils/customLogger.service";
+import { AppConfigService } from "../appconfig/appconfig.service";
+import { ErrorHandlerService } from "../exception/errorHandler.service";
+import { OAuthTokenService } from "./oauthtoken.service";
+
 /*
-* This class will help to get the properties from app config.
-* app config endpoints needs to be configured in app settings and ManagedIdentity permission should be provided to connect.
-* Contact cloudinfra@fairwaymc.com /VeronicaP@fairwaymc.com to have primary and secondary end points configured in function app settings.
-* Ex- For global - global-config-endpoint,global-config-endpoint-secondary
-* For project specific - app-config-endpoint ,app-config-endpoint-secondary
+* This class will help to get the OAUth Token for give scopes.
+* For local development reach out to cloudinfra@fairwaymc.com to get the values for apimScope,managedIdentityClientId & tenantId.
+* For cloud environment cloudinfra Team will add apimScope to app ,managedIdentityClientId to appconfig and give ManagedIdentity access to APIM
 */
-  @injectable()
-  export class AppConfigServiceImpl implements AppConfigService {
+@injectable()
+export class OAuthTokenSeviceImpl implements OAuthTokenService {
 	private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
-	private readonly baseErrorHandler=container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
-	
-	async getGlobalConfiguration(configKey: string): Promise<string> {
-		this.logger.info(`getGlobalConfiguration Value Method Initiated with appconfig configKey ${configKey}`);
-		return  this.getconfig(configKey, true);
-  
+	private readonly baseErrorHandler = container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
+	private readonly appConfigService: AppConfigService = container.get<AppConfigService>(TYPES.AppConfigService);
+
+	async getAPIMToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
+		return this.getToken(apimScope, managedIdentityClientId, tenantId);
 	}
-	async getConfiguration(configKey: string): Promise<string> {
-		this.logger.info(`getConfiguration Value Method Initiated with appconfig configKey ${configKey}`);
-		return  this.getconfig(configKey, false);
+	async getCoreServiceEncompassAPIMToken(): Promise<string> {
+		this.logger.info(`getCoreServiceEncompassAPIMToken Method Initiated `);
+		let apimScope: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:SCOPE");
+		let apimBackEnd: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:BACKEND");
+		return this.getToken(apimScope, apimBackEnd, null);
+
 	}
-  
-	private async getconfig(configKey: string, isGlobal: boolean): Promise<string> {
-		this.logger.trace(`getConfig Value Method Initiated with appconfig configKey ${configKey}`);
-		let configurationValue: string = await this.getLocalConfiguration(configKey);
-		if (configurationValue) {
-			this.logger.info(`fetched configuration value from env ${configurationValue}`);
-		} else {
-			let primaryEndpoint: string;
-			let secondaryEndpoint: string;
-			if (isGlobal === true) {
-			  primaryEndpoint = process.env["global-config-endpoint"];
-			  secondaryEndpoint = process.env["global-config-endpoint-secondary"];
+
+	private async getToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
+		let apimToken;
+		let credential;
+		this.logger.info(`getToken Method Initiated `);
+		try {
+			if (process.env["environment"] === "local") {
+				// tenantId required only for local development. For Azure environment ManagedIdentity will be used to authenticate.
+				if (!tenantId) {
+					tenantId = await this.appConfigService.getConfiguration("AZURE_TENANT_ID");
+				}
+				credential = new DefaultAzureCredential({
+					tenantId: tenantId
+				});
 			} else {
-			  primaryEndpoint = process.env["app-config-endpoint"];
-			  secondaryEndpoint = process.env["app-config-endpoint-secondary"];
+				credential = new ManagedIdentityCredential(managedIdentityClientId);
 			}
-			configurationValue = await this.getConfigurationFromEndpoint(primaryEndpoint, configKey);
-			if(!configurationValue){
-				this.logger.warn(`configurationValue not found in primaryEndpoint ${primaryEndpoint}. Try to fetch from secondary endpoint ${secondaryEndpoint}`);
-				configurationValue = await this.getConfigurationFromEndpoint(secondaryEndpoint, configKey);
-			}
+			const authResponse = await credential.getToken(apimScope);
+			apimToken = authResponse.token;
+			this.logger.info(`getToken Method completed`);
+		} catch (error) {
+			this.baseErrorHandler.handleError(error, `error in OAuthTokenSeviceImpl.getToken:: ${error.message}`);
+			throw error;
 		}
-		return configurationValue;
+		return apimToken;
 	}
-	private async getLocalConfiguration(configKey: string): Promise<string> {
-		const configurationValue: string = process.env[configKey];
-		this.logger.info(`From AppConfigServiceImpl getLocalConfiguration:: 
-		config key - ${configKey}, config Value - ${configurationValue}`);
-		return configurationValue;
-	}
-  
-	private async getConfigurationFromEndpoint(endpoint: string,configKey: string)
-	: Promise<string> {
-		const label: string = process.env["environment"];
-		let configurationValue: string ;
-	   
-		try{
-		  const credential = new ManagedIdentityCredential();
-		  const client = new AppConfigurationClient(endpoint, credential);
-		  const settings: GetConfigurationSettingResponse =   await client.getConfigurationSetting({
-				key: configKey,
-				label,
-			});
-		this.logger.trace(`From AppConfigServiceImpl getConfigurationFromEndpoint::
-		 config key - ${configKey},label-${label} config  - ${JSON.stringify(settings)}`);
-		configurationValue = settings.value;
-		this.logger.info(`From AppConfigServiceImpl getConfigurationFromEndpoint::
-		 config key - ${configKey},label-${label} config Value - ${configurationValue}`);
-		}catch(error){
-			this.baseErrorHandler.handleError(error,`error in AppConfigServiceImpl.getConfigurationFromEndpoint 
-			while getting appconfig for endpoint: ${endpoint}  , key ${configKey} , label ${label}`);
-		}
-		
-		return configurationValue;
-	}
-  }
-  
+
+}
