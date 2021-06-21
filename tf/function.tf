@@ -58,6 +58,8 @@ resource "azurerm_function_app" "service-name" {
     "WEBSITE_RUN_FROM_PACKAGE"              = "1"
     "LOG_LEVEL"                             = local.settings.loglevel
     "environment"                           = local.settings.environment
+    "global-config-endpoint"                = local.settings.global-config-endpoint
+    "global-config-endpoint-secondary"      = local.settings.global-config-endpoint-secondary
   }
   site_config {
     scm_type   = "VSTSRM"
