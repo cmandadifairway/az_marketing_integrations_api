@@ -2,6 +2,7 @@ import { ManagedIdentityCredential, DefaultAzureCredential } from "@azure/identi
 import { injectable } from "inversify";
 import container from "../../../inversify.config";
 import { TYPES } from "../../inversify/types";
+import { ApplicationError } from "../../model/appError.model";
 import { CustomLogger } from "../../utils/customLogger.service";
 import { AppConfigService } from "../appconfig/appconfig.service";
 import { ErrorHandlerService } from "../exception/errorHandler.service";
@@ -9,9 +10,11 @@ import { OAuthTokenService } from "./oauthtoken.service";
 
 /*
 * This class will help to get the OAUth Token for give scopes.
-* For local development reach out to cloudinfra@fairwaymc.com to get the values for apimScope,managedIdentityClientId & tenantId.
+* For local development reach out to cloudinfra@fairwaymc.com/VeronicaP@fairwaymc.com to get the values for apimScope,managedIdentityClientId & tenantId.
+* tenantId can also be found from Dev subscription by running command az login
 * For cloud environment cloudinfra Team will add apimScope to app ,managedIdentityClientId to appconfig and give ManagedIdentity access to APIM
 */
+
 @injectable()
 export class OAuthTokenSeviceImpl implements OAuthTokenService {
 	private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
@@ -50,7 +53,7 @@ export class OAuthTokenSeviceImpl implements OAuthTokenService {
 			this.logger.info(`getToken Method completed`);
 		} catch (error) {
 			this.baseErrorHandler.handleError(error, `error in OAuthTokenSeviceImpl.getToken:: ${error.message}`);
-			throw error;
+			throw new ApplicationError(error, "OAUTH_ERROR", 500, `error while getting APIMToken:: ${error.message}`);
 		}
 		return apimToken;
 	}
