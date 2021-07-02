@@ -404,9 +404,7 @@ code/local.settings.json
 code/test-report.xml
 code/coverage
 
-#generated files
-code/*/index.js
-code/*/index.map.js
+
 # Local .terraform directories
 **/.terraform/*
 
