@@ -52,8 +52,7 @@ resource "azurerm_function_app" "service-name" {
     "APPINSIGHTS_INSTRUMENTATIONKEY"        = azurerm_application_insights.service-name.instrumentation_key
     "FUNCTIONS_EXTENSION_VERSION"           = "~3"
     "KEY_VAULT_URL"                         = "https://kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}.vault.azure.net/"
-    "FUNCTIONS_V2_COMPATIBILITY_MODE"       = "true"
-    "WEBSITE_NODE_DEFAULT_VERSION"          = "12.13.0"
+    "WEBSITE_NODE_DEFAULT_VERSION"          = "14.15.1"
     "SCM_ZIPDEPLOY_DONOT_PRESERVE_FILETIME" = "1"
     "WEBSITE_RUN_FROM_PACKAGE"              = "1"
     "LOG_LEVEL"                             = local.settings.loglevel
