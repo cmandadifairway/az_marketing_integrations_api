@@ -26,9 +26,7 @@ export class UtilityService {
     body?: unknown
   ): Promise<AxiosResponse> {
     this.logger.info(
-      `UtilityService.axiosCall -> config are  ${JSON.stringify(
-        config
-      )} and body is ${JSON.stringify(body)}`
+      `UtilityService.axiosCall ->  recieved call for endpoint ${endpoint}`
     );
     let responseObj: AxiosResponse;
 
