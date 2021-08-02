@@ -1,10 +1,12 @@
-export enum TYPES {
-	KeyVaultService = "KeyVaultService",
-	AppConfigService = "AppConfigService",
-	UtilityService = "UtilityService",
-	AxiosErrorHandler = "AxiosErrorHandler",
-	BaseErrorHandler = "BaseErrorHandlerServiceImpl",
-	CustomLogger = "CustomLogger",
-	StatusInfoService = "StatusInfoService",
-	OAUTH = "OAUTH"
-}
+const TYPES = {
+    KeyVaultService: Symbol.for("KeyVaultService"),
+    AppConfigService: Symbol.for("AppConfigService"),
+    UtilityService: Symbol.for("UtilityService"),
+    AxiosErrorHandler: Symbol.for("AxiosErrorHandler"),
+    BaseErrorHandler: Symbol.for("BaseErrorHandlerServiceImpl"),
+    CustomLogger: Symbol.for("CustomLogger"),
+    StatusInfoService: Symbol.for("StatusInfoService"),
+    OAUTH: Symbol.for("OAUTH"),
+};
+
+export { TYPES };
