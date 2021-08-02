@@ -30,6 +30,9 @@
                 escapeType: none
                 tokenPrefix: "__"
                 tokenSuffix: "__"
+            - task: TerraformInstaller@0
+              inputs:
+                terraformVersion: ${{Parameters.tfversion}}
             - script: |
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
                 terraform workspace select ${{Parameters.env}} || terraform workspace new ${{Parameters.env}}
