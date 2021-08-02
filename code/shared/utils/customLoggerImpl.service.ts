@@ -27,10 +27,18 @@ export class CustomLoggerImpl implements CustomLogger {
         ["ERROR", [SeverityLevel.Error, SeverityLevel.Critical]],
     ]);
 
+    /**
+     * For logging information for testing purposes only. Will not log in Production envirnonment.
+     * @param message String of information to log.
+     */
     trace(message: string): void {
         this.logMessage(message, SeverityLevel.Verbose);
     }
 
+    /**
+     * For logging information necessary to see in all envirnonments.
+     * @param message String of information to log.
+     */
     info(message: string): void {
         this.logMessage(message, SeverityLevel.Information);
     }

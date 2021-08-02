@@ -3,7 +3,7 @@ What we get out of this template
 1) Basic set up which can help to set up azure pipeline and create required azure resources for the project.
 2) Health check URL
 3) Common code to access key vault, app configuration from azure.
-4) Common frameworks like logging ,exception framework.
+4) Common frameworks like logging, exception framework.
 5) Node-typescript coding standards.
 6) Jest framework integration for unit testing.
 7) Application insight configuration.
@@ -28,10 +28,10 @@ Add below enteries to local.settings.json file to get functionapp up and running
 
 
 Please refer below confluence links for more details.
+https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/1637417281/NodeJS+Back+end+Coding+Standards
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/470089733/Setting+up+Azure+Functions+with+NodeJS
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/483721231/Microservices+Architecture
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/500793474/Serverless+Microservices+-+Fairway+Projects
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/503185525/Azure-NodeJs+application+Stacks
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/604569763/Exception+Framework-+nodeJs+Azure+Functions
 https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/1095270454/Logging+using+Appinsight+in+Azure+Functions
-
