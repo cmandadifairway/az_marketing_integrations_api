@@ -9,53 +9,51 @@ import { ErrorHandlerService } from "../exception/errorHandler.service";
 import { OAuthTokenService } from "./oauthtoken.service";
 
 /*
-* This class will help to get the OAUth Token for give scopes.
-* For local development reach out to cloudinfra@fairwaymc.com/VeronicaP@fairwaymc.com to get the values for apimScope,managedIdentityClientId & tenantId.
-* tenantId can also be found from Dev subscription by running command az login
-* For cloud environment cloudinfra Team will add apimScope to app ,managedIdentityClientId to appconfig and give ManagedIdentity access to APIM
-*/
+ * This class will help to get the OAUth Token for give scopes.
+ * For local development reach out to cloudinfra@fairwaymc.com/VeronicaP@fairwaymc.com to get the values for apimScope,managedIdentityClientId & tenantId.
+ * tenantId can also be found from Dev subscription by running command az login
+ * For cloud environment cloudinfra Team will add apimScope to app ,managedIdentityClientId to appconfig and give ManagedIdentity access to APIM
+ */
 
 @injectable()
 export class OAuthTokenSeviceImpl implements OAuthTokenService {
-	private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
-	private readonly baseErrorHandler = container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
-	private readonly appConfigService: AppConfigService = container.get<AppConfigService>(TYPES.AppConfigService);
+    private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
+    private readonly baseErrorHandler = container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
+    private readonly appConfigService: AppConfigService = container.get<AppConfigService>(TYPES.AppConfigService);
 
-	async getAPIMToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
-		return this.getToken(apimScope, managedIdentityClientId, tenantId);
-	}
-	async getCoreServiceEncompassAPIMToken(): Promise<string> {
-		this.logger.info(`getCoreServiceEncompassAPIMToken Method Initiated `);
-		let apimScope: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:SCOPE");
-		let apimBackEnd: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:BACKEND");
-		return this.getToken(apimScope, apimBackEnd, null);
+    async getAPIMToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
+        return this.getToken(apimScope, managedIdentityClientId, tenantId);
+    }
+    async getCoreServiceEncompassAPIMToken(): Promise<string> {
+        this.logger.trace(`getCoreServiceEncompassAPIMToken Method Initiated `);
+        let apimScope: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:SCOPE");
+        let apimBackEnd: string = await this.appConfigService.getGlobalConfiguration("APIM:ENCOMPASS:BACKEND");
+        return this.getToken(apimScope, apimBackEnd, null);
+    }
 
-	}
-
-	private async getToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
-		let apimToken;
-		let credential;
-		this.logger.info(`getToken Method Initiated `);
-		try {
-			if (process.env["environment"] === "local") {
-				// tenantId required only for local development. For Azure environment ManagedIdentity will be used to authenticate.
-				if (!tenantId) {
-					tenantId = await this.appConfigService.getConfiguration("AZURE_TENANT_ID");
-				}
-				credential = new DefaultAzureCredential({
-					tenantId: tenantId
-				});
-			} else {
-				credential = new ManagedIdentityCredential(managedIdentityClientId);
-			}
-			const authResponse = await credential.getToken(apimScope);
-			apimToken = authResponse.token;
-			this.logger.info(`getToken Method completed`);
-		} catch (error) {
-			this.baseErrorHandler.handleError(error, `error in OAuthTokenSeviceImpl.getToken:: ${error.message}`);
-			throw new ApplicationError(error, "OAUTH_ERROR", 500, `error while getting APIMToken:: ${error.message}`);
-		}
-		return apimToken;
-	}
-
+    private async getToken(apimScope: string, managedIdentityClientId: string, tenantId: string): Promise<string> {
+        let apimToken;
+        let credential;
+        this.logger.trace(`getToken Method Initiated `);
+        try {
+            if (process.env["environment"] === "local") {
+                // tenantId required only for local development. For Azure environment ManagedIdentity will be used to authenticate.
+                if (!tenantId) {
+                    tenantId = await this.appConfigService.getConfiguration("AZURE_TENANT_ID");
+                }
+                credential = new DefaultAzureCredential({
+                    tenantId: tenantId,
+                });
+            } else {
+                credential = new ManagedIdentityCredential(managedIdentityClientId);
+            }
+            const authResponse = await credential.getToken(apimScope);
+            apimToken = authResponse.token;
+            this.logger.trace(`getToken Method completed`);
+        } catch (error) {
+            this.baseErrorHandler.handleError(error, `error in OAuthTokenSeviceImpl.getToken:: ${error.message}`);
+            throw new ApplicationError(error, "OAUTH_ERROR", 500, `error while getting APIMToken:: ${error.message}`);
+        }
+        return apimToken;
+    }
 }

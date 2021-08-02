@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import  container  from "../../inversify.config";
+import container from "../../inversify.config";
 import { TYPES } from "../inversify/types";
 import { UtilityService } from "./utility.service";
 import axios from "axios";
@@ -21,11 +21,10 @@ jest.mock("applicationinsights", () => {
             commonProperties: {},
             context: {
                 keys: { operationId: 123 },
-                tags: {}
+                tags: {},
             },
-            trackTrace:jest.fn(),
-            trackDependency:jest.fn()
-
+            trackTrace: jest.fn(),
+            trackDependency: jest.fn(),
         },
         setup,
         setAutoDependencyCorrelation,
@@ -35,7 +34,7 @@ jest.mock("applicationinsights", () => {
         setAutoCollectDependencies,
         setAutoCollectConsole,
         setUseDiskRetryCaching,
-        start
+        start,
     };
     setup.mockImplementation(() => appInsObj);
     setAutoDependencyCorrelation.mockImplementation(() => appInsObj);
@@ -49,65 +48,72 @@ jest.mock("applicationinsights", () => {
     return appInsObj;
 });
 
-describe("test getBoolean Method",()=>{
-    test("getBoolean for invalid value" , async()=>{
-        const utilityService=new UtilityService();
-        const value=utilityService.getBoolean("testMe");
+describe("test getBoolean Method", () => {
+    test("getBoolean for invalid value", async () => {
+        const utilityService = new UtilityService();
+        const value = utilityService.getBoolean("testMe");
         expect(value).toBeFalsy;
     });
-    test("getBoolean for  value" , async()=>{
-        const utilityService=new UtilityService();
-        const value=utilityService.getBoolean("true");
+    test("getBoolean for  value", async () => {
+        const utilityService = new UtilityService();
+        const value = utilityService.getBoolean("true");
         expect(value).toBeFalsy;
     });
-    test("getBoolean for  value" , async()=>{
-        const utilityService=new UtilityService();
-        const value=utilityService.getBoolean("y");
+    test("getBoolean for  value", async () => {
+        const utilityService = new UtilityService();
+        const value = utilityService.getBoolean("y");
         expect(value).toBeFalsy;
     });
-    test("getBoolean for  value" , async()=>{
-        const utilityService=new UtilityService();
-        const value=utilityService.getBoolean("yes");
+    test("getBoolean for  value", async () => {
+        const utilityService = new UtilityService();
+        const value = utilityService.getBoolean("yes");
         expect(value).toBeFalsy;
     });
-    test("getBoolean for  value" , async()=>{
-        const utilityService=new UtilityService();
-        const value=utilityService.getBoolean("Y");
+    test("getBoolean for  value", async () => {
+        const utilityService = new UtilityService();
+        const value = utilityService.getBoolean("Y");
         expect(value).toBeFalsy;
     });
 });
 
-describe(" Test axiosCall Method",()=>{
-    jest.spyOn(CustomLoggerImpl.prototype,"error").mockImplementation(() => Promise.resolve());
-    jest.spyOn(CustomLoggerImpl.prototype,"trace").mockImplementation(() => jest.fn());
-    jest.spyOn(CustomLoggerImpl.prototype,"info").mockImplementation(() => jest.fn());
-    test("test success flow post call ",async()=>{
-       jest.spyOn(axios, "post").mockResolvedValue({test:"test"});
-        const utilityService=new UtilityService();
-        const response=await utilityService.axiosCall("test.com","post",{"Authorization":"Bearer 0007DGuPiqvWJhPcxthtjgWw9che"},{"test":"test"});
+describe(" Test axiosCall Method", () => {
+    jest.spyOn(CustomLoggerImpl.prototype, "error").mockImplementation(() => Promise.resolve());
+    jest.spyOn(CustomLoggerImpl.prototype, "trace").mockImplementation(() => jest.fn());
+    jest.spyOn(CustomLoggerImpl.prototype, "info").mockImplementation(() => jest.fn());
+    test("test success flow post call ", async () => {
+        jest.spyOn(axios, "post").mockResolvedValue({ test: "test" });
+        const utilityService = new UtilityService();
+        const response = await utilityService.axiosCall(
+            "test.com",
+            "post",
+            { Authorization: "Bearer 0007DGuPiqvWJhPcxthtjgWw9che" },
+            { test: "test" }
+        );
         expect(response).toBeDefined;
     });
-    test("test success flow get call",async()=>{
-        jest.spyOn(axios, "get").mockResolvedValue({test:"test"});
-         const utilityService=new UtilityService();
-         const response=await utilityService.axiosCall("test.com","get",{"Authorization":"Bearer 0007DGuPiqvWJhPcxthtjgWw9che"});
-         expect(response).toBeDefined;
-     });
-    test("test error return ApplicationError ",async()=>{
-       jest.spyOn(axios, "post").mockRejectedValue("Network error: Something went wrong");
-        const utilityService=new UtilityService();
-        try{
-            await utilityService.axiosCall("test.com","post",null);
-        }catch(error){
+    test("test success flow get call", async () => {
+        jest.spyOn(axios, "get").mockResolvedValue({ test: "test" });
+        const utilityService = new UtilityService();
+        const response = await utilityService.axiosCall("test.com", "get", {
+            Authorization: "Bearer 0007DGuPiqvWJhPcxthtjgWw9che",
+        });
+        expect(response).toBeDefined;
+    });
+    test("test error return ApplicationError ", async () => {
+        jest.spyOn(axios, "post").mockRejectedValue("Network error: Something went wrong");
+        const utilityService = new UtilityService();
+        try {
+            await utilityService.axiosCall("test.com", "post", null);
+        } catch (error) {
             expect(error).toBeInstanceOf(AxiosError);
         }
     });
-    test("test error flow",async()=>{
+    test("test error flow", async () => {
         jest.spyOn(axios, "post").mockRejectedValue("Network error: Something went wrong");
-        const utilityService=new UtilityService();
-        try{
-            await utilityService.axiosCall("test.com","post",null);
-        }catch(error){
+        const utilityService = new UtilityService();
+        try {
+            await utilityService.axiosCall("test.com", "post", null);
+        } catch (error) {
             expect(error.name).toEqual("INTEGRATION_ERROR");
         }
     });

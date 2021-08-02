@@ -2,7 +2,7 @@ export class ResponseModel {
     private responseHeader: Object;
     private responseBody: string;
     private responseStatus: number;
-    
+
     public getResponseHeader(): Object {
         return this.responseHeader;
     }
@@ -11,18 +11,17 @@ export class ResponseModel {
         this.responseHeader = responseHeader;
     }
 
-    getResponseBody(): string{
+    getResponseBody(): string {
         return this.responseBody;
     }
-    getResponseStatus():number{
+    getResponseStatus(): number {
         return this.responseStatus;
     }
 
-    setResponseBody(responseBody: string): void{
-        this.responseBody=responseBody;
+    setResponseBody(responseBody: string): void {
+        this.responseBody = responseBody;
     }
-    setResponseStatus(responseStatus:number):void{
-         this.responseStatus= responseStatus;
+    setResponseStatus(responseStatus: number): void {
+        this.responseStatus = responseStatus;
     }
-
 }

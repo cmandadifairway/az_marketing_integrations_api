@@ -18,23 +18,14 @@ import { OAuthTokenSeviceImpl } from "./shared/service/oauth/oauthtokenimpl.serv
 
 const container = new Container();
 
-container
-  .bind<KeyVaultService>(TYPES.KeyVaultService)
-  .to(KeyVaultServiceImpl)
-  .inSingletonScope();
+container.bind<KeyVaultService>(TYPES.KeyVaultService).to(KeyVaultServiceImpl).inSingletonScope();
 
-container
-  .bind<AppConfigService>(TYPES.AppConfigService)
-  .to(AppConfigServiceImpl)
-  .inSingletonScope();
+container.bind<AppConfigService>(TYPES.AppConfigService).to(AppConfigServiceImpl).inSingletonScope();
 container.bind<ErrorHandlerService>(TYPES.BaseErrorHandler).to(BaseErrorHandlerServiceImpl).inSingletonScope();
 container.bind<ErrorHandlerService>(TYPES.AxiosErrorHandler).to(AxiosErrorHandlerServiceImpl).inSingletonScope();
 container.bind<CustomLogger>(TYPES.CustomLogger).to(CustomLoggerImpl).inSingletonScope();
 container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService).inSingletonScope();
 container.bind<OAuthTokenService>(TYPES.OAUTH).to(OAuthTokenSeviceImpl).inSingletonScope();
-container
-  .bind<StatusInfoService>(TYPES.StatusInfoService)
-  .to(StatusInfoServiceImpl)
-  .inSingletonScope();
+container.bind<StatusInfoService>(TYPES.StatusInfoService).to(StatusInfoServiceImpl).inSingletonScope();
 
 export default container;

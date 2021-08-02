@@ -5,7 +5,6 @@ import { Info } from "../model/info.model";
 
 @injectable()
 export class StatusInfoServiceImpl implements StatusInfoService {
-
     async getStatusInfo(): Promise<StatusInfo> {
         const statusInfo: StatusInfo = new StatusInfo();
         statusInfo.healthy = true;

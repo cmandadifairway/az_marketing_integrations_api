@@ -1,4 +1,4 @@
-export class Info{
+export class Info {
     key: string;
     value: string;
 }
