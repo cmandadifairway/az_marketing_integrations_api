@@ -33,7 +33,7 @@ stages:
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
       env: dev
       group: InfraVar-Dev
-
+      tfversion: '0.14.6'
 - stage: Release_Production
   displayName: Release To Production
   dependsOn: Release_Development
@@ -46,3 +46,4 @@ stages:
         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
         env: prd
         group: InfraVar-Prd
+        tfversion: '0.14.6'
