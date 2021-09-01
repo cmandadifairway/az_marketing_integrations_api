@@ -31,7 +31,7 @@ export class AppConfigServiceImpl implements AppConfigService {
         this.logger.trace(`getConfig Value Method Initiated with appconfig configKey ${configKey}`);
         let configurationValue: string = await this.getLocalConfiguration(configKey);
         if (configurationValue) {
-            this.logger.trace(`fetched configuration value from env ${configurationValue}`);
+            this.logger.trace(`fetched configuration value from env for ${configKey}`);
         } else {
             let primaryEndpoint: string;
             let secondaryEndpoint: string;
@@ -70,8 +70,6 @@ export class AppConfigServiceImpl implements AppConfigService {
                 key: configKey,
                 label,
             });
-            this.logger.trace(`From AppConfigServiceImpl getConfigurationFromEndpoint::
-		 config key - ${configKey},label-${label} config  - ${JSON.stringify(settings)}`);
             configurationValue = settings.value;
             this.logger.trace(`From AppConfigServiceImpl getConfigurationFromEndpoint::
 		 config key - ${configKey},label-${label} config Value - ${configurationValue}`);
