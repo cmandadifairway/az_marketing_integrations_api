@@ -3,7 +3,7 @@ pr: none
 trigger:
   branches:
     include:
-    - master
+    - release
     - develop
     - feature/*
   paths:
@@ -17,33 +17,46 @@ stages:
   jobs:
   - template: templates/build-job.yaml
     parameters:
-      servicename: 'service-name'
+      servicename: 'ff-admin-api'
       npm_command: ci
       artifactory_endpoint: Artifactory
 
 - stage: Release_Development
   displayName: Release To Development
   dependsOn: build
-  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/release')))
   jobs:
   - template: templates/deploy.yaml
     parameters:
       job_name: Deploy_Dev
-      servicename: 'service-name'
+      servicename: 'ff-admin-api'
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
       env: dev
       group: InfraVar-Dev
       tfversion: '0.14.6'
 - stage: Release_Production
-  displayName: Release To Production
+  displayName: Release To Production CUS
   dependsOn: Release_Development
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/release'))
   jobs:
     - template: templates/deploy.yaml
       parameters:
         job_name: Deploy_Prod
-        servicename: 'service-name'
+        servicename: 'ff-admin-api'
         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
         env: prd
+        group: InfraVar-Prd
+        tfversion: '0.14.6'
+- stage: Release_Production_EUS2
+  displayName: Release To Production EUS2
+  dependsOn: Release_Development
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/release'))
+  jobs:
+    - template: templates/deploy.yaml
+      parameters:
+        job_name: Deploy_Prod
+        servicename: 'ff-admin-api'
+        svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
+        env: prd-eus2
         group: InfraVar-Prd
         tfversion: '0.14.6'

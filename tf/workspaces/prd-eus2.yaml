@@ -1,0 +1,26 @@
+﻿environment: prd
+loglevel: INFO
+subscription_id: a7b1e7e0-020d-44d1-b0b9-759379b7cbfc
+spn_id: f69c00c8-85b0-4d50-a854-210c49b06e34
+spn_oid: c535db37-0896-4ff0-baca-0f775755fb5e
+opsadmin_oid: 428df686-64d1-485f-aa41-f3a3960d31fc
+opsengineer_oid: ed1e1140-02ef-43eb-ba40-8c8f3aead742
+tags:
+  pid: n/a
+  Expiration: n/a
+  Environment: Production
+location: eastus2
+locabbrev: eus2
+log_analytics: law-fim-infapp-prd-eus-aa
+log_analytics_rg: rg-fim-infapp-prd-aa
+rbac_enabled: 0
+ip_restrictions:
+  - 209.163.181.85/32 #Citrix Colo
+  - 209.163.181.66/30 #Prod Colo
+  - 4.14.128.2/30 #Prod Marsh
+  - 97.105.87.2/30 #DR Marsh
+  - 74.116.196.66/30 #DR Citrix
+  - 38.68.11.40/32 #DR COLO
+  - 38.68.11.2/32 #VPN
+  - 4.17.92.2/32 #VPN
+  - 208.184.31.194/32 #VPN

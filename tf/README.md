@@ -1,8 +1,8 @@
 ​            |
 
-# service-name Terraform
+# ff-admin-api Terraform
 
-This source code is used to deploy the service-name function app for Fairway IT using the AzureRM Provider for Terraform for more information please visit: <https://www.terraform.io/docs/providers/azurerm/r/app_service.html>
+This source code is used to deploy the ff-admin-api function app for Fairway IT using the AzureRM Provider for Terraform for more information please visit: <https://www.terraform.io/docs/providers/azurerm/r/app_service.html>
 
 This will create an Azure Function App(Consumption Model), Applications Insights, Storage Account, & Key Vault.
 
@@ -81,7 +81,7 @@ If there is a star next to the field name it is not mandatory.
 
 1. Clone the repo onto your own system (or just download).
 
-2.  Find and replace all instances of service-name with your own values. This is used to name the resources. 
+2.  Find and replace all instances of ff-admin-api with your own values. This is used to name the resources.
 
 3. Update the config & workspace specific yaml files to your specifications
 
@@ -109,5 +109,5 @@ If there is a star next to the field name it is not mandatory.
    terraform apply -var client_secret="<value>"
    ```
 
-   
+
 

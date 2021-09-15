@@ -1,0 +1,24 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.22.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-ANSIREGEX-1583908:
+    - applicationinsights-native-metrics > @mapbox/node-pre-gyp > npmlog > gauge > strip-ansi > ansi-regex:
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+    - applicationinsights-native-metrics > @mapbox/node-pre-gyp > npmlog > gauge > string-width > strip-ansi > ansi-regex:
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+    - '@azure/identity > keytar > prebuild-install > npmlog > gauge > strip-ansi > ansi-regex':
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+    - applicationinsights-native-metrics > @mapbox/node-pre-gyp > npmlog > gauge > wide-align > string-width > strip-ansi > ansi-regex:
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+    - '@azure/identity > keytar > prebuild-install > npmlog > gauge > string-width > strip-ansi > ansi-regex':
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+    - '@azure/identity > keytar > prebuild-install > npmlog > gauge > wide-align > string-width > strip-ansi > ansi-regex':
+        reason: '          Exception granted by Robert Jacobs on 9/14/2021, no upgrade path available'
+        expires: '2021-10-15T18:36:45.316Z'
+patch: {}

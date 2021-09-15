@@ -91,6 +91,7 @@ jobs:
         projectName: '$(Build.Repository.Name)'
         organization: 'fairway-independent-mortgage-corporation'
         failOnIssues: true
+        additionalArguments: -d --policy-path=$(Build.SourcesDirectory)/.snyk
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/code/dist/'

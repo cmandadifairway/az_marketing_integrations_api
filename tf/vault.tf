@@ -11,7 +11,7 @@ resource "azurerm_key_vault" "keyVault" {
   name                       = "kv-${local.settings.subscipt}-${local.settings.environment}-${local.settings.service}"
   location                   = local.settings.location
   resource_group_name        = data.azurerm_resource_group.kvrg.name
-  tenant_id                  = azurerm_function_app.service-name.identity.0.tenant_id
+  tenant_id                  = azurerm_function_app.ff-admin-api.identity.0.tenant_id
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
   sku_name                   = "standard"
@@ -33,8 +33,8 @@ resource "azurerm_key_vault" "keyVault" {
 resource "azurerm_key_vault_access_policy" "webKeyVaultPolicy" {
   key_vault_id = azurerm_key_vault.keyVault.id
 
-  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
-  object_id = azurerm_function_app.service-name.identity.0.principal_id
+  tenant_id = azurerm_function_app.ff-admin-api.identity.0.tenant_id
+  object_id = azurerm_function_app.ff-admin-api.identity.0.principal_id
 
   secret_permissions = [
     "get",
@@ -45,7 +45,7 @@ resource "azurerm_key_vault_access_policy" "webKeyVaultPolicy" {
 resource "azurerm_key_vault_access_policy" "spnkeyvaultpolicy" {
   key_vault_id = azurerm_key_vault.keyVault.id
 
-  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
+  tenant_id = azurerm_function_app.ff-admin-api.identity.0.tenant_id
   object_id = local.settings.spn_oid
 
   secret_permissions = [
@@ -58,7 +58,7 @@ resource "azurerm_key_vault_access_policy" "spnkeyvaultpolicy" {
 resource "azurerm_key_vault_access_policy" "azureadmins" {
   key_vault_id = azurerm_key_vault.keyVault.id
 
-  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
+  tenant_id = azurerm_function_app.ff-admin-api.identity.0.tenant_id
   object_id = local.settings.opsadmin_oid
 
   secret_permissions = [
@@ -72,7 +72,7 @@ resource "azurerm_key_vault_access_policy" "azureadmins" {
 resource "azurerm_key_vault_access_policy" "azureengineers" {
   key_vault_id = azurerm_key_vault.keyVault.id
 
-  tenant_id = azurerm_function_app.service-name.identity.0.tenant_id
+  tenant_id = azurerm_function_app.ff-admin-api.identity.0.tenant_id
   object_id = local.settings.opsengineer_oid
 
   secret_permissions = [
