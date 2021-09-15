@@ -2,10 +2,10 @@
 subscipt: infapp
 service: ffadmin
 default_tags:
-  service-product: Function Application
-  costcenter: 1070
+  service-product: Fairway First Admin API
+  costcenter: 1151
   data-classification: Private
-  Owner-email: username@fairwaymc.com
+  Owner-email: jessica.manna@fairwaymc.com
   pid: n/a
   Expiration: n/a
 acmglobal: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-core/providers/Microsoft.AppConfiguration/configurationStores/acm-fim-infapp-prd-cus-global
