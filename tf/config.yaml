@@ -1,6 +1,6 @@
 ﻿
 subscipt: infapp
-service: ff-admin-api
+service: ffadmin
 default_tags:
   service-product: Function Application
   costcenter: 1070

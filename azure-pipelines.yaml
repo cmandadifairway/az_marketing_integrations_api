@@ -17,7 +17,7 @@ stages:
   jobs:
   - template: templates/build-job.yaml
     parameters:
-      servicename: 'ff-admin-api'
+      servicename: 'ffadmin'
       npm_command: ci
       artifactory_endpoint: Artifactory
 
@@ -29,7 +29,7 @@ stages:
   - template: templates/deploy.yaml
     parameters:
       job_name: Deploy_Dev
-      servicename: 'ff-admin-api'
+      servicename: 'ffadmin'
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
       env: dev
       group: InfraVar-Dev
@@ -42,7 +42,7 @@ stages:
     - template: templates/deploy.yaml
       parameters:
         job_name: Deploy_Prod
-        servicename: 'ff-admin-api'
+        servicename: 'ffadmin'
         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
         env: prd
         group: InfraVar-Prd
@@ -55,7 +55,7 @@ stages:
     - template: templates/deploy.yaml
       parameters:
         job_name: Deploy_Prod
-        servicename: 'ff-admin-api'
+        servicename: 'ffadmin'
         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
         env: prd-eus2
         group: InfraVar-Prd

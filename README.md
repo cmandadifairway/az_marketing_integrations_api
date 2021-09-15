@@ -20,12 +20,12 @@
 
 Running this pipeline will create the following resources with the approved [naming convention](https://fairway.atlassian.net/wiki/spaces/sysarch/pages/147685462/Naming+Convention):
 
-- Resource Group: rg-fim-infapp-dev-cus-[ff-admin-api]
-- App Service Plan: fn-fim-infapp-dev-cus-[ff-admin-api]-plan
-- Function App: fn-fim-infapp-dev-cus-[ff-admin-api]
-- Blob Storage: sainfappdevcus[ff-admin-api]
-- Key Vault: kv-infapp-dev-[ff-admin-api]
-- Application Insights: ai-fim-infapp-dev-cus-[ff-admin-api]
+- Resource Group: rg-fim-infapp-dev-cus-[ffadmin]
+- App Service Plan: fn-fim-infapp-dev-cus-[ffadmin]-plan
+- Function App: fn-fim-infapp-dev-cus-[ffadmin]
+- Blob Storage: sainfappdevcus[ffadmin]
+- Key Vault: kv-infapp-dev-[ffadmin]
+- Application Insights: ai-fim-infapp-dev-cus-[ffadmin]
 
 ### Environment Variables
 
@@ -35,7 +35,7 @@ The following environment variables will be available from the function applicat
 | ---------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------- |
 | environment                              | Environment abbreviation                                     | dev                                                  |
 | APPINSIGHTS_INSTRUMENTATIONKEY           | The instrumentation key identifies the resource that you want to associate your telemetry data with for application insights. |                                                      |
-| KEY_VAULT_URL                            | The URL to the key vault created with your project           | https://kv-infapp-dev-[ff-admin-api].vault.azure.net |
+| KEY_VAULT_URL                            | The URL to the key vault created with your project           | https://kv-infapp-dev-[ffadmin].vault.azure.net |
 | WEBSITE_CONTENTAZUREFILECONNECTIONSTRING | The connection string for the storage account created with your project |                                                      |
 | LOG_LEVEL                                | Logging level                                                | DEBUG                                                |
 
