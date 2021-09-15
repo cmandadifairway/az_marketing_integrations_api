@@ -16,6 +16,7 @@ describe("getConfiguration method testing ", () => {
         expect(value).toBeUndefined;
     });
     test("getconfig  return response from AppConfigurationClient", async () => {
+        process.env["app-config-endpoint"] = "https://sample.azconfig.io/";
         const response = new AppConfigurationSettingResponseMockImpl();
         response.key = "testme";
         response.label = "TEST";
@@ -51,6 +52,7 @@ describe("getGlobalConfiguration method testing ", () => {
         expect(value).toBeUndefined;
     });
     test("getconfig  return response from AppConfigurationClient", async () => {
+        process.env["global-config-endpoint"] = "https://sample.azconfig.io/";
         const response = new AppConfigurationSettingResponseMockImpl();
         response.key = "testme";
         response.label = "TEST";
