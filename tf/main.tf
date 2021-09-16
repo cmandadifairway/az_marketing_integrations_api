@@ -19,7 +19,7 @@ variable "client_secret" {
 terraform {
   backend "azurerm" {
     container_name = "tstate"
-    key            = "ff-admin-api/terraform.tfstate"
+    key            = "ffadmin/terraform.tfstate"
   }
 }
 
