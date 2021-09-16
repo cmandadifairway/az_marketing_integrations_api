@@ -19,5 +19,5 @@ export class ConfigBase {
 @injectable()
 export class ServiceBase extends ConfigBase {
     @inject(TYPES.CustomLogger)
-    public customLogger: CustomLogger;
+    public logger: CustomLogger;
 }

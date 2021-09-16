@@ -21,7 +21,7 @@ export class KeyVaultServiceImpl extends ServiceBase implements KeyVaultService 
 
                 secretValue = secret.value;
             } catch (error) {
-                this.customLogger.error("Failed to get secret from key vault", error);
+                this.logger.error("Failed to get secret from key vault", error);
                 throw error;
             }
         }

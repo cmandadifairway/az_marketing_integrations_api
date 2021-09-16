@@ -11,7 +11,7 @@ import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
 import { CustomLogger } from "../shared/utils/customLogger.service";
 import { TYPES } from "../shared/inversify/types";
-import { ResponseModel } from "../shared/model/response.model";
+import { ResponseModel } from "./model/response.model";
 import { BaseError } from "../shared/model/baseError.model";
 import { ApplicationError } from "../shared/model/appError.model";
 import { classToPlain } from "class-transformer";

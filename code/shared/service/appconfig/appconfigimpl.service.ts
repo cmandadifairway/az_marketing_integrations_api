@@ -1,10 +1,7 @@
 import { AppConfigurationClient, GetConfigurationSettingResponse } from "@azure/app-configuration";
 import { ManagedIdentityCredential } from "@azure/identity";
 import { AppConfigService } from "./appconfig.service";
-import { injectable } from "inversify";
-import { container } from "../../../inversify.config";
-import { TYPES } from "../../inversify/types";
-import { CustomLogger } from "../../utils/customLogger.service";
+import { ServiceBase } from "../serviceBase";
 
 /*
  * This class will help to get the properties from app config.
@@ -13,25 +10,23 @@ import { CustomLogger } from "../../utils/customLogger.service";
  * Ex- For global - global-config-endpoint,global-config-endpoint-secondary
  * For project specific - app-config-endpoint ,app-config-endpoint-secondary
  */
-@injectable()
-export class AppConfigServiceImpl implements AppConfigService {
-    private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
-
-    async getGlobalConfiguration(configKey: string): Promise<string> {
-        this.logger.trace(`getGlobalConfiguration Value Method Initiated with appconfig configKey ${configKey}`);
+export class AppConfigServiceImpl extends ServiceBase implements AppConfigService {
+    public async getGlobalConfiguration(configKey: string): Promise<string> {
         return this.getconfig(configKey, true);
     }
-    async getConfiguration(configKey: string): Promise<string> {
-        this.logger.trace(`getConfiguration Value Method Initiated with appconfig configKey ${configKey}`);
+
+    public async getSecondaryConfiguration(configKey: string): Promise<string> {
         return this.getconfig(configKey, false);
     }
 
+    public getConfiguration(configKey: string): string {
+        const configurationValue: string = process.env[configKey] || "";
+        return configurationValue;
+    }
+
     private async getconfig(configKey: string, isGlobal: boolean): Promise<string> {
-        this.logger.trace(`getConfig Value Method Initiated with appconfig configKey ${configKey}`);
-        let configurationValue: string = await this.getLocalConfiguration(configKey);
-        if (configurationValue) {
-            this.logger.trace(`fetched configuration value from env for ${configKey}`);
-        } else {
+        let configurationValue: string = this.getConfiguration(configKey);
+        if (!configurationValue) {
             let primaryEndpoint: string;
             let secondaryEndpoint: string;
             if (isGlobal === true) {
@@ -44,17 +39,11 @@ export class AppConfigServiceImpl implements AppConfigService {
             configurationValue = await this.getConfigurationFromEndpoint(primaryEndpoint, configKey);
             if (!configurationValue) {
                 this.logger.warn(
-                    `configurationValue not found in primaryEndpoint ${primaryEndpoint}. Try to fetch from secondary endpoint ${secondaryEndpoint}`
+                    "configurationValue not found in primaryEndpoint. Try to fetch from secondary endpoint."
                 );
                 configurationValue = await this.getConfigurationFromEndpoint(secondaryEndpoint, configKey);
             }
         }
-        return configurationValue;
-    }
-    private async getLocalConfiguration(configKey: string): Promise<string> {
-        const configurationValue: string = process.env[configKey];
-        this.logger.trace(`From AppConfigServiceImpl getLocalConfiguration::
-		config key - ${configKey}, config Value - ${configurationValue}`);
         return configurationValue;
     }
 
@@ -71,7 +60,10 @@ export class AppConfigServiceImpl implements AppConfigService {
             });
             configurationValue = settings.value;
         } catch (error) {
-            this.logger.error(`error in AppConfigServiceImpl.getConfigurationFromEndpoint while getting key ${configKey}`, error);
+            this.logger.error(
+                `error in AppConfigServiceImpl.getConfigurationFromEndpoint while getting key ${configKey}`,
+                error
+            );
         }
 
         return configurationValue;
