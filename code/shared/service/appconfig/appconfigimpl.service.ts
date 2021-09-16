@@ -2,10 +2,10 @@ import { AppConfigurationClient, GetConfigurationSettingResponse } from "@azure/
 import { ManagedIdentityCredential } from "@azure/identity";
 import { AppConfigService } from "./appconfig.service";
 import { injectable } from "inversify";
-import container from "../../../inversify.config";
+import { container } from "../../../inversify.config";
 import { TYPES } from "../../inversify/types";
 import { CustomLogger } from "../../utils/customLogger.service";
-import { ErrorHandlerService } from "../exception/errorHandler.service";
+
 /*
  * This class will help to get the properties from app config.
  * app config endpoints needs to be configured in app settings and ManagedIdentity permission should be provided to connect.
@@ -16,7 +16,6 @@ import { ErrorHandlerService } from "../exception/errorHandler.service";
 @injectable()
 export class AppConfigServiceImpl implements AppConfigService {
     private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
-    private readonly baseErrorHandler = container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
 
     async getGlobalConfiguration(configKey: string): Promise<string> {
         this.logger.trace(`getGlobalConfiguration Value Method Initiated with appconfig configKey ${configKey}`);
@@ -71,14 +70,8 @@ export class AppConfigServiceImpl implements AppConfigService {
                 label,
             });
             configurationValue = settings.value;
-            this.logger.trace(`From AppConfigServiceImpl getConfigurationFromEndpoint::
-		 config key - ${configKey},label-${label} config Value - ${configurationValue}`);
         } catch (error) {
-            this.baseErrorHandler.handleError(
-                error,
-                `error in AppConfigServiceImpl.getConfigurationFromEndpoint
-			while getting appconfig for endpoint: ${endpoint}  , key ${configKey} , label ${label}`
-            );
+            this.logger.error(`error in AppConfigServiceImpl.getConfigurationFromEndpoint while getting key ${configKey}`, error);
         }
 
         return configurationValue;

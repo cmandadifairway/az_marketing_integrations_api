@@ -1,6 +1,3 @@
-import "reflect-metadata";
-import container from "../../inversify.config";
-import { TYPES } from "../inversify/types";
 import { UtilityService } from "./utility.service";
 import axios from "axios";
 import { AxiosError } from "../model/axiosError.model";

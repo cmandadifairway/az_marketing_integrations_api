@@ -2,10 +2,11 @@ import { KeyVaultServiceImpl } from "./keyvaultImpl.service";
 import { CustomLoggerImpl } from "../../utils/customLoggerImpl.service";
 import { SecretClient } from "@azure/keyvault-secrets";
 import { KeyVaultSecretMockImpl } from "../../../testing/mock/keyVaultSecretMockImpl.service";
-import container from "../../../inversify.config";
+import { container } from "../../../inversify.config";
 import { TYPES } from "../../inversify/types";
 import { CustomLogger } from "../../utils/customLogger.service";
 import { CustomLoggerMockImpl } from "../../../testing/mock/customLoggerMockimpl.service";
+
 describe("KeyVaultService testing", () => {
     test("getSecretValue  throws error", async () => {
         jest.spyOn(CustomLoggerImpl.prototype, "trace").mockImplementation(() => jest.fn());

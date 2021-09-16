@@ -1,35 +1,36 @@
-import "reflect-metadata";
-import container from "../../../inversify.config";
-import { TYPES } from "../../inversify/types";
-import { injectable } from "inversify";
 import { KeyVaultService } from "./keyvault.service";
 import { ManagedIdentityCredential } from "@azure/identity";
 import { SecretClient } from "@azure/keyvault-secrets";
-import { CustomLogger } from "../../utils/customLogger.service";
-import { ErrorHandlerService } from "../exception/errorHandler.service";
-@injectable()
-export class KeyVaultServiceImpl implements KeyVaultService {
-    private readonly logger = container.get<CustomLogger>(TYPES.CustomLogger);
-    private readonly baseErrorHandler = container.get<ErrorHandlerService>(TYPES.BaseErrorHandler);
+import { ServiceBase } from "../serviceBase";
 
-    public async getSecretValue(secretName: string): Promise<string> {
-        this.logger.trace(`getSecretValue Method Initiated with secretName ${secretName}`);
-        let secretValue: string = process.env[secretName];
+// Ensure the client is instantiated once
+let kvClient: SecretClient;
+export class KeyVaultServiceImpl extends ServiceBase implements KeyVaultService {
+    async getSecretValue(secretKey: string): Promise<string> {
+        let secretValue: string = process.env[secretKey];
+
         if (!secretValue) {
             try {
-                const credential = new ManagedIdentityCredential();
-                const url = process.env["KEY_VAULT_URL"];
-                const client = new SecretClient(url, credential);
-                const secretObj = await client.getSecret(secretName);
-                this.logger.trace(`secretValue recieved from keyVault for secretKey :: ${secretName}`);
-                secretValue = secretObj.value;
+                let keyVaultClient: SecretClient;
+                if (!kvClient) {
+                    keyVaultClient = this.getKeyVaultClient();
+                } else {
+                    keyVaultClient = kvClient;
+                }
+                const secret = await keyVaultClient.getSecret(secretKey);
+
+                secretValue = secret.value;
             } catch (error) {
-                this.baseErrorHandler.handleError(
-                    error,
-                    "error in KeyVaultServiceImpl.getSecretValue while getting secret: "
-                );
+                this.customLogger.error("Failed to get secret from key vault", error);
+                throw error;
             }
         }
         return secretValue;
+    }
+
+    private getKeyVaultClient() {
+        const credential = new ManagedIdentityCredential();
+        kvClient = new SecretClient(process.env["KEY_VAULT_URL"], credential);
+        return kvClient;
     }
 }

@@ -7,9 +7,8 @@ appInsights
     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
     .start();
 const appInsightClient = appInsights.defaultClient;
-import * as HttpStatusCodes from "http-status-codes";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import container from "../inversify.config";
+import { container } from "../inversify.config";
 import { CustomLogger } from "../shared/utils/customLogger.service";
 import { TYPES } from "../shared/inversify/types";
 import { ResponseModel } from "../shared/model/response.model";
@@ -18,9 +17,6 @@ import { ApplicationError } from "../shared/model/appError.model";
 import { classToPlain } from "class-transformer";
 import { StatusInfoService } from "./service/statusinfoservice.service";
 import { StatusInfo } from "./model/statusinfo.model";
-import { AppConfigService } from "../shared/service/appconfig/appconfig.service";
-
-const appConfigService: AppConfigService = container.get<AppConfigService>(TYPES.AppConfigService);
 
 export const healthCheck: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const logger = container.get<CustomLogger>(TYPES.CustomLogger);
@@ -35,13 +31,13 @@ export const healthCheck: AzureFunction = async function (context: Context, req:
         const statusInfoService = container.get<StatusInfoService>(TYPES.StatusInfoService);
         const statusInfo: StatusInfo = await statusInfoService.getStatusInfo();
         responseModel.setResponseBody(JSON.stringify(classToPlain(statusInfo)));
-        responseModel.setResponseStatus(HttpStatusCodes.OK);
+        responseModel.setResponseStatus(200);
     } catch (error) {
         logger.error(`Error in Http Trigger function healthcheck -index file::`, error);
         const errorResponseObj = await errorResponse(
             `Error in health check `,
             "APP_ERROR",
-            HttpStatusCodes.INTERNAL_SERVER_ERROR,
+            500,
             context.traceContext.traceparent,
             error
         );
@@ -86,14 +82,14 @@ export const httpTrigger: AzureFunction = async function contextPropagatingHttpT
         appInsightClient.context.tags[appInsightClient.context.keys.operationName] = "HealthCheck";
         const startTime = Date.now(); // Start trackRequest timer
         appInsightClient.trackTrace({
-            message: `lets start the correlation - 
-          OperationParentId::  ${correlationContext.operation.parentId} 
+            message: `lets start the correlation -
+          OperationParentId::  ${correlationContext.operation.parentId}
           - TRACEPARENT:: ${context.traceContext.traceparent} `,
         });
         // Run the Function
         await healthCheck(context, req);
         appInsightClient.trackTrace({
-            message: `lets end the correlation - OperationParentId - ${correlationContext.operation.parentId} 
+            message: `lets end the correlation - OperationParentId - ${correlationContext.operation.parentId}
       - TRACEPARENT-${context.traceContext.traceparent} `,
         });
         // Track Request on completion
