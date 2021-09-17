@@ -1,6 +1,6 @@
 import { healthCheck } from "./index";
-import { ContextMock } from "../testing/mock/ContextMock.model";
-import { HttpRequestMock } from "../testing/mock/HttpRequestMock.model";
+import { ContextMock } from "../mock/ContextMock.model";
+import { HttpRequestMock } from "../mock/HttpRequestMock.model";
 import { Context, Logger } from "@azure/functions";
 
 jest.mock("applicationinsights", () => {
