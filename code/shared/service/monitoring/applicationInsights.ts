@@ -24,7 +24,7 @@ export class AppInsights extends ConfigBase implements AppInsightsService {
                     .setAutoCollectExceptions(true)
                     .setAutoCollectDependencies(true)
                     .setAutoCollectConsole(true)
-                    .setUseDiskRetryCaching(false)
+                    .setUseDiskRetryCaching(true)
                     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
                     .start();
                 const appInsightClient = appInsights.defaultClient;

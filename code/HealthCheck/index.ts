@@ -4,7 +4,6 @@ appInsights
     .setup() // assuming ikey is in env var
     .setAutoDependencyCorrelation(true, true)
     .setAutoCollectDependencies(true)
-    .setUseDiskRetryCaching(false)
     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
     .start();
 const appInsightClient = appInsights.defaultClient;
