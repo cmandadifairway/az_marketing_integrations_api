@@ -6,7 +6,6 @@ import { BaseError } from "../model/baseError.model";
 import { classToPlain } from "class-transformer";
 
 export class CustomLoggerImpl extends ConfigBase implements CustomLogger {
-    private readonly env = process.env["environment"] || "";
     private readonly client: appInsights.TelemetryClient = appInsights.defaultClient;
 
     trace(message: string): void {
@@ -47,6 +46,10 @@ export class CustomLoggerImpl extends ConfigBase implements CustomLogger {
     }
 
     private async logMessage(message: string, severity: SeverityLevel, data?: any): Promise<void> {
+        let logMsg = "";
+        if (message !== "") {
+            logMsg = message;
+        }
         let _data = "";
         if (data) {
             if (typeof data === "string") {
@@ -54,20 +57,27 @@ export class CustomLoggerImpl extends ConfigBase implements CustomLogger {
             } else {
                 _data = JSON.stringify(classToPlain(data));
             }
+            if (logMsg === "") {
+                logMsg = _data;
+            } else {
+                logMsg += `, ${_data}`;
+            }
         }
-        if (this.env === "unittest") {
+        const env = process.env["environment"];
+        if (env === "unittest") {
             return;
-        } else if (this.env === "local") {
+        } else if (env === "local") {
             console.log(`${message}, ${_data}`);
         } else {
-            this.client?.trackTrace({ message: `${message}, ${_data}`, severity });
+            this.client?.trackTrace({ message: logMsg, severity });
         }
     }
 
     private async trackException(error: Error, severity: SeverityLevel): Promise<void> {
-        if (this.env === "unittest") {
+        const env = process.env["environment"];
+        if (env === "unittest") {
             return;
-        } else if (this.env !== "local") {
+        } else if (env !== "local") {
             this.client?.trackException({ exception: error, severity });
         }
     }

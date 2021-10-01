@@ -3,7 +3,7 @@ import { Container } from "inversify";
 import { TYPES } from "./shared/inversify/types";
 import { AppConfigService } from "./shared/service/appconfig/appconfig.service";
 import { AppConfigServiceImpl } from "./shared/service/appconfig/appconfigimpl.service";
-import { AppInsights, AppInsightsService } from "./shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "./shared/service/monitoring/applicationInsights";
 import { CustomLogger } from "./shared/utils/customLogger.service";
 import { CustomLoggerImpl } from "./shared/utils/customLoggerImpl.service";
 import { CustomValidator } from "./shared/validators/customValidator";
@@ -33,7 +33,7 @@ import { UpdateLoGroupService, UpdateLoService } from "./UpdateLoGroup/service/u
 const container = new Container();
 
 container.bind<AppConfigService>(TYPES.AppConfigService).to(AppConfigServiceImpl).inSingletonScope();
-container.bind<AppInsightsService>(TYPES.AppInsightsService).to(AppInsights).inSingletonScope();
+container.bind<AppInsightsService>(TYPES.AppInsightsService).to(AppInsightsService).inSingletonScope();
 container.bind<CustomLogger>(TYPES.CustomLogger).to(CustomLoggerImpl).inSingletonScope();
 container.bind<CustomValidator>(TYPES.CustomValidator).to(CustomValidatorImpl).inSingletonScope();
 container.bind<DbConnectionService>(TYPES.DbConnectionService).to(DbConnectionService).inSingletonScope();

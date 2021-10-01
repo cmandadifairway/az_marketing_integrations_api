@@ -4,11 +4,7 @@ import { ConfigBase } from "../serviceBase";
 import { TYPES } from "../../inversify/types";
 import { AppConfigService } from "../appconfig/appconfig.service";
 
-export interface AppInsightsService {
-    startService(context: Context, functionName: string): Promise<void>;
-}
-
-export class AppInsights extends ConfigBase implements AppInsightsService {
+export class AppInsightsService extends ConfigBase {
     private readonly appConfigService = this.resolve<AppConfigService>(TYPES.AppConfigService);
 
     public async startService(context: Context, functionName: string): Promise<void> {
@@ -37,7 +33,7 @@ export class AppInsights extends ConfigBase implements AppInsightsService {
                 appInsightClient.context.tags[operationIdKey] = context.traceContext.traceparent;
             } catch (error) {
                 // Do not use custom logger as that creates a loop and breaks all logging
-                console.log("APPINFO::Error From AppInsights Service Module", error);
+                console.log("APPINFO::Error From AppInsightsService Service Module", error);
             }
         }
     }

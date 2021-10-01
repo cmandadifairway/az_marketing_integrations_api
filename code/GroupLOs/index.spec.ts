@@ -1,11 +1,11 @@
 import httpTrigger from "./index";
 import { ContextMock, HttpRequestMock } from "../mock/azure.mock";
 import { CampaignGroupService } from "../shared/service/groups/campaignGroup";
-import { AppInsights } from "../shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 
 describe("Group LOs Index tests", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsights.prototype, "startService").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("Happy Path", async () => {

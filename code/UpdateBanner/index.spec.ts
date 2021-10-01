@@ -2,11 +2,11 @@ import httpTrigger from "./index";
 import { Banners } from "./../shared/service/banner/bannerService";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { AppInsights } from "../shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 
 describe("Update Banner", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsights.prototype, "startService").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {

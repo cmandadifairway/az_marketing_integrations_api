@@ -2,11 +2,11 @@ import httpTrigger from "./index";
 import { HelpFaq } from "./../shared/service/helpFaq/helpFaqService";
 import { HttpRequestMockPost } from "./../mock/azure.mock";
 import { ContextMock, InvalidHttpRequestMock } from "../mock/azure.mock";
-import { AppInsights } from "../shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 
 describe("Create Faq", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsights.prototype, "startService").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {
