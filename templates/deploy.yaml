@@ -1,7 +1,7 @@
 ﻿ jobs:
   - deployment: ${{Parameters.job_name}}
     pool:
-      vmImage: ubuntu-latest
+      vmImage: windows-latest
     variables:
       - group: ${{Parameters.group}}
     environment: ${{Parameters.env}}
