@@ -67,7 +67,7 @@ export class CustomLoggerImpl extends ConfigBase implements CustomLogger {
         if (env === "unittest") {
             return;
         } else if (env === "local") {
-            console.log(`${message}, ${_data}`);
+            console.log(`${logMsg}`);
         } else {
             this.client?.trackTrace({ message: logMsg, severity });
         }

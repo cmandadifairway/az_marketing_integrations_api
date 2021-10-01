@@ -11,13 +11,10 @@ export class AppInsightsService extends ConfigBase {
         const env = this.appConfigService.getConfiguration("environment");
         if (env !== "unittest" && env !== "local") {
             try {
-                const appInsightsKey = process.env["APPINSIGHTS_INSTRUMENTATIONKEY"];
+                //const appInsightsKey = process.env["APPINSIGHTS_INSTRUMENTATIONKEY"];
                 appInsights
-                    .setup(appInsightsKey)
-                    .setAutoDependencyCorrelation(true)
-                    .setAutoCollectRequests(true)
-                    .setAutoCollectPerformance(true)
-                    .setAutoCollectExceptions(true)
+                    .setup()
+                    .setAutoDependencyCorrelation(true, true)
                     .setAutoCollectDependencies(true)
                     .setAutoCollectConsole(true)
                     .setUseDiskRetryCaching(true)
