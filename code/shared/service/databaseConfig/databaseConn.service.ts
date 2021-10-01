@@ -1,5 +1,5 @@
 import { MongoClient, Db } from "mongodb";
-import { KeyVaultService } from "../keyVault/keyVault.service";
+import { KeyVaultService } from "../keyvault/keyvault.service";
 import { TYPES } from "../../inversify/types";
 import { ServiceBase } from "../serviceBase";
 

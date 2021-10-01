@@ -4,7 +4,7 @@ import { ReadPreference } from "mongodb";
 import { Response } from "../../../../shared/model/response";
 import { LoanOfficerResponse } from "../../../../LoanOfficer/model/loanOfficerResponse";
 import { LoanOfficerByNameResponse } from "../../../../LoanOfficerByName/model/loanOfficerByNameResponse";
-import { LoanOfficer } from "../../../model/LoanOfficer";
+import { LoanOfficer } from "../../../model/loanOfficer";
 
 export interface LoanOfficerDataService {
     getLoanOfficer(query: object, throwError: boolean): Promise<LoanOfficerResponse>;

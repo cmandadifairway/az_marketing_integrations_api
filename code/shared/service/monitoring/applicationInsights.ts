@@ -2,7 +2,7 @@ import * as appInsights from "applicationinsights";
 import { Context } from "@azure/functions";
 import { ConfigBase } from "../serviceBase";
 import { TYPES } from "../../inversify/types";
-import { AppConfigService } from "../appconfig/appConfig.service";
+import { AppConfigService } from "../appconfig/appconfig.service";
 
 export interface AppInsightsService {
     startService(context: Context, functionName: string): Promise<void>;

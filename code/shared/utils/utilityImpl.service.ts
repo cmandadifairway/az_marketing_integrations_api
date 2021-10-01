@@ -1,14 +1,10 @@
 import { ServiceBase } from "../service/serviceBase";
-import { TYPES } from "../inversify/types";
-import { AppConfigService } from "../service/appConfig/appConfig.service";
 import { UtilityService } from "./utility.service";
 
 /**
  * Utility class
  */
 export class Utility extends ServiceBase implements UtilityService {
-    private readonly appConfigService = this.resolve<AppConfigService>(TYPES.AppConfigService);
-
     /**
      * Returns today's date in current timezone
      */
