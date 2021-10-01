@@ -68,7 +68,7 @@ jobs:
           # sonar.exclusions=**/*.bin
           sonar.language=js
           sonar.projectKey=$(Build.Repository.Name)
-          sonar.profile=Infosec way Recommended
+          sonar.profile=Sonar way Recommended
           sonar.exclusions=node_modules/**/*,code/testing/**/*, **/*spec.ts, **/webpack*js, **/*config.js
           sonar.javascript.lcov.reportPaths=code/coverage/lcov.info
         workingDirectory: '$(Build.SourcesDirectory)'
