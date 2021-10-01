@@ -1,3 +1,11 @@
+import * as appInsights from "applicationinsights";
+appInsights
+    .setup() // assuming ikey is in env var
+    .setAutoDependencyCorrelation(true, true)
+    .setAutoCollectDependencies(true)
+    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
+    .start();
+const appInsightClient = appInsights.defaultClient;
 import { LoanOfficerResponse } from "./model/loanOfficerResponse";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
@@ -11,9 +19,9 @@ import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
+    //const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
-    await appInsightsService.startService(context, functionName);
+    //await appInsightsService.startService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
