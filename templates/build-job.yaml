@@ -2,7 +2,7 @@
 jobs:
   - job: Build_Deployment_Artifacts
     pool:
-      vmImage: ubuntu-latest
+      vmImage: windows-latest
     variables:
       npm_config_cache: $(Pipeline.Workspace)/.npm
     steps:
