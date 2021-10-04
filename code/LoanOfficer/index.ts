@@ -5,7 +5,6 @@ appInsights
     .setAutoCollectDependencies(true)
     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
     .start();
-const appInsightClient = appInsights.defaultClient;
 import { LoanOfficerResponse } from "./model/loanOfficerResponse";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
@@ -18,13 +17,11 @@ import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
-var os = require("os");
-console.log(`os type ${os.type()}`);
-var fs = require("fs");
 console.log(`process.env.systemdrive: ${process.env.systemdrive}`);
-var ICACLS_PATH = process.env.systemdrive + "/windows/system32/icacls.exe";
-var test = fs.existsSync(ICACLS_PATH);
-console.log(`existsSync ${test}`);
+console.log(`SystemDrive ${process.env.SystemDrive}`);
+console.log(`SystemRoot ${process.env.SystemRoot}`);
+console.log(`env ${process.env.environment}`);
+console.log(`APPSETTING_environment ${process.env.APPSETTING_environment}`);
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     //const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
