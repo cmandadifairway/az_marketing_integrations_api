@@ -1,4 +1,4 @@
-﻿data "azurerm_log_analytics_workspace" "main" {
+data "azurerm_log_analytics_workspace" "main" {
   name                = local.settings.log_analytics
   resource_group_name = local.settings.log_analytics_rg
 }

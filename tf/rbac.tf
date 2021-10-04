@@ -1,4 +1,4 @@
-﻿resource "azurerm_role_assignment" "ACM_Global" {
+resource "azurerm_role_assignment" "ACM_Global" {
   scope                = local.settings.acmglobal
   role_definition_name = "App Configuration Data Reader"
   principal_id         = azurerm_function_app.ffadmin.identity.0.principal_id
