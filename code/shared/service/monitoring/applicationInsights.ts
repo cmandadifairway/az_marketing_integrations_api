@@ -7,11 +7,10 @@ import { AppConfigService } from "../appconfig/appconfig.service";
 export class AppInsightsService extends ConfigBase {
     private readonly appConfigService = this.resolve<AppConfigService>(TYPES.AppConfigService);
 
-    public async startService(context: Context, functionName: string): Promise<void> {
+    public startService(): void {
         const env = this.appConfigService.getConfiguration("environment");
         if (env !== "unittest" && env !== "local") {
             try {
-                //const appInsightsKey = process.env["APPINSIGHTS_INSTRUMENTATIONKEY"];
                 appInsights
                     .setup()
                     .setAutoDependencyCorrelation(true, true)
@@ -20,6 +19,17 @@ export class AppInsightsService extends ConfigBase {
                     .setUseDiskRetryCaching(true)
                     .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
                     .start();
+            } catch (error) {
+                // Do not use custom logger as that creates a loop and breaks all logging
+                console.log("APPINFO::Error From AppInsightsService Service Module while starting service", error);
+            }
+        }
+    }
+
+    public async setupProperties(context: Context, functionName: string): Promise<void> {
+        const env = this.appConfigService.getConfiguration("environment");
+        if (env !== "unittest" && env !== "local") {
+            try {
                 const appInsightClient = appInsights.defaultClient;
                 let requestId: string = context.invocationId;
                 appInsightClient.commonProperties["requestId"] = requestId;
@@ -30,7 +40,7 @@ export class AppInsightsService extends ConfigBase {
                 appInsightClient.context.tags[operationIdKey] = context.traceContext.traceparent;
             } catch (error) {
                 // Do not use custom logger as that creates a loop and breaks all logging
-                console.log("APPINFO::Error From AppInsightsService Service Module", error);
+                console.log("APPINFO::Error From AppInsightsService Service Module while setting up properties", error);
             }
         }
     }

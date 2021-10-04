@@ -12,7 +12,7 @@ import { container } from "../inversify.config";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
 import { CustomLogger } from "../shared/utils/customLogger.service";
 import { Response } from "../shared/model/response";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+//import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";

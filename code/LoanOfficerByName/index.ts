@@ -9,10 +9,12 @@ import { loByNameRequest } from "./model/loByNameRequest";
 import { LOByNameService } from "./service/LOByName.service";
 import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
 
+const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
+appInsightsService.startService();
+
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficerByName";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.setupProperties(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
