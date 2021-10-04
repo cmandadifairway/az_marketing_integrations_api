@@ -10,7 +10,7 @@ import { LOByNameService } from "./service/LOByName.service";
 import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
 
 const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
-appInsightsService.startService();
+appInsightsService.start();
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const functionName = "LoanOfficerByName";
