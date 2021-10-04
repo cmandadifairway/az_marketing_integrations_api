@@ -18,6 +18,8 @@ import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
+var os = require("os");
+console.log(`os type ${os.type()}`);
 var fs = require("fs");
 console.log(`process.env.systemdrive: ${process.env.systemdrive}`);
 var ICACLS_PATH = process.env.systemdrive + "/windows/system32/icacls.exe";
