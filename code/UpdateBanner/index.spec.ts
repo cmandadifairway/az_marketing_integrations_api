@@ -6,7 +6,7 @@ import { AppInsightsService } from "../shared/service/monitoring/applicationInsi
 
 describe("Update Banner", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {

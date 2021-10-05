@@ -1,3 +1,10 @@
+import * as appInsights from "applicationinsights";
+appInsights
+    .setup() // assuming ikey is in env var
+    .setAutoDependencyCorrelation(true, true)
+    .setAutoCollectDependencies(true)
+    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
+    .start();
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -9,10 +16,8 @@ import { loByNameRequest } from "./model/loByNameRequest";
 import { LOByNameService } from "./service/LOByName.service";
 import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
 
-const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
-appInsightsService.start();
-
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+    const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficerByName";
     await appInsightsService.setupProperties(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);

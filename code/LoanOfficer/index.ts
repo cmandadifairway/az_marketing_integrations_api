@@ -11,22 +11,16 @@ import { container } from "../inversify.config";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
 import { CustomLogger } from "../shared/utils/customLogger.service";
 import { Response } from "../shared/model/response";
-//import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
-console.log(`process.env.systemdrive: ${process.env.systemdrive}`);
-console.log(`SystemDrive ${process.env.SystemDrive}`);
-console.log(`SystemRoot ${process.env.SystemRoot}`);
-console.log(`env ${process.env.environment}`);
-console.log(`APPSETTING_environment ${process.env.APPSETTING_environment}`);
-
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    //const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
+    const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
-    //await appInsightsService.startService(context, functionName);
+    await appInsightsService.setupProperties(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,

@@ -1,3 +1,13 @@
+import * as appInsights from "applicationinsights";
+const env = process.env.environment;
+if (env !== "unittest" && env !== "local") {
+    appInsights
+        .setup() // assuming ikey is in env var
+        .setAutoDependencyCorrelation(true, true)
+        .setAutoCollectDependencies(true)
+        .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
+        .start();
+}
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -12,7 +22,7 @@ import { UpdateBannerRequest } from "./model/updateBannerRequest";
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateBanner";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.setupProperties(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
