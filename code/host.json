@@ -5,11 +5,12 @@
         "version": "[1.*, 2.0.0)"
     },
     "logging": {
-        "applicationInsights": {
-            "samplingSettings": {
-                "isEnabled": true,
-                "excludedTypes": "Request"
-            }
+        "fileLoggingMode": "always",
+        "logLevel": {
+            "default": "Information",
+            "Host.Results": "Error",
+            "Function": "Information",
+            "Host.Aggregator": "Error"
         }
     }
 
