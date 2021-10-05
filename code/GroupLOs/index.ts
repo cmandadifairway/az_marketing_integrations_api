@@ -62,7 +62,7 @@ export const groupLos: AzureFunction = async function (context: Context, req: Ht
         };
     }
 };
-export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+export const httpTriggerGroupLos: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
     const correlationContext = appInsights.startOperation(context, req);
     return appInsights.wrapWithCorrelationContext(async () => {
         await groupLos(context, req);

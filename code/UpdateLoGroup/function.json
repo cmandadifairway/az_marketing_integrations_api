@@ -15,5 +15,5 @@
         }
     ],
     "scriptFile": "../dist/UpdateLoGroup/index.js",
-    "entryPoint": "httpTrigger"
+    "entryPoint": "httpTriggerUpdateLoGroup"
 }

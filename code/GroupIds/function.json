@@ -17,5 +17,5 @@
         }
     ],
     "scriptFile": "../dist/GroupIds/index.js",
-    "entryPoint": "httpTrigger"
+    "entryPoint": "httpTriggerGroupIds"
 }

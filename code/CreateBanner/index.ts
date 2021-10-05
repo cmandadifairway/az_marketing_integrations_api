@@ -60,7 +60,7 @@ export const createBanner: AzureFunction = async function (context: Context, req
         };
     }
 };
-export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+export const httpTriggerCreateBanner: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
     const correlationContext = appInsights.startOperation(context, req);
     return appInsights.wrapWithCorrelationContext(async () => {
         await createBanner(context, req);

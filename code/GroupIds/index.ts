@@ -60,7 +60,7 @@ export const groupIds: AzureFunction = async function (context: Context, req: Ht
         };
     }
 };
-export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+export const httpTriggerGroupIds: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
     const correlationContext = appInsights.startOperation(context, req);
     return appInsights.wrapWithCorrelationContext(async () => {
         await groupIds(context, req);

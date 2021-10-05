@@ -19,14 +19,6 @@ import { loByNameRequest } from "./model/loByNameRequest";
 import { LOByNameService } from "./service/LOByName.service";
 import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
 
-export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
-    const correlationContext = appInsights.startOperation(context, req);
-    return appInsights.wrapWithCorrelationContext(async () => {
-        await loByName(context, req);
-        appInsights.defaultClient.flush();
-    }, correlationContext)();
-};
-
 export const loByName: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficerByName";
@@ -69,5 +61,10 @@ export const loByName: AzureFunction = async function (context: Context, req: Ht
         };
     }
 };
-
-export default httpTrigger;
+export const httpTriggerLoByName: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await loByName(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};
