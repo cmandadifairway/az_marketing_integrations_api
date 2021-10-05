@@ -19,7 +19,7 @@ import { CustomValidator } from "../shared/validators/customValidator";
 import { CreateFaqRequest } from "./model/createFaqRequest";
 import { HelpFaqService } from "../shared/service/helpFaq/helpFaqService";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const createFaq: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "CreateFaq";
     await appInsightsService.setupProperties(context, functionName);
@@ -55,5 +55,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await createFaq(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

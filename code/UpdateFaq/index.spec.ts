@@ -1,4 +1,4 @@
-import httpTrigger from "./index";
+import { updateFaq } from "./index";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
 import { HelpFaq } from "../shared/service/helpFaq/helpFaqService";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -10,7 +10,7 @@ describe("Update Faq Index", () => {
     });
 
     test("when input is empty", async () => {
-        await httpTrigger(ContextMock, InvalidHttpRequestMock);
+        await updateFaq(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body).toEqual(ErrorService.invalidRequest);
     });
 
@@ -24,7 +24,7 @@ describe("Update Faq Index", () => {
         HttpRequestMockPostwithID.body["active"] = false;
         HttpRequestMockPostwithID.body["category"] = "test";
         HttpRequestMockPostwithID.body["orderBy"] = 10;
-        await httpTrigger(ContextMock, HttpRequestMockPostwithID);
+        await updateFaq(ContextMock, HttpRequestMockPostwithID);
         expect(spy).toHaveBeenCalled();
         expect(ContextMock.res.body.data).toEqual("Data is updated");
         expect(ContextMock.res.body.Error).toBeFalsy();

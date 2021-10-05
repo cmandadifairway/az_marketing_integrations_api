@@ -14,5 +14,6 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/CreateFaq/index.js"
+    "scriptFile": "../dist/CreateFaq/index.js",
+    "entryPoint": "httpTrigger"
 }

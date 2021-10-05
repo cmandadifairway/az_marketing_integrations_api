@@ -19,7 +19,7 @@ import { CustomValidator } from "../shared/validators/customValidator";
 import { BannerService } from "../shared/service/banner/bannerService";
 import { UpdateBannerRequest } from "./model/updateBannerRequest";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const updateBanner: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateBanner";
     await appInsightsService.setupProperties(context, functionName);
@@ -60,5 +60,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await updateBanner(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

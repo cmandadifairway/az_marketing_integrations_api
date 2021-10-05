@@ -19,6 +19,9 @@ export class AppInsightsService extends ConfigBase {
                 // Use this with "tagOverrides" to correlate custom telemetry to the parent function invocation.
                 const operationIdKey = appInsightClient.context.keys.operationId;
                 appInsightClient.context.tags[operationIdKey] = context.traceContext.traceparent;
+                appInsightClient.context.tags[appInsightClient.context.keys.cloudRole] = process.env["WEBSITE_SITE_NAME"];
+                //set the name of funtion to define the operationName
+                appInsightClient.context.tags[appInsightClient.context.keys.operationName] = functionName;
             } catch (error) {
                 // Do not use custom logger as that creates a loop and breaks all logging
                 console.log("APPINFO::Error From AppInsightsService Service Module while setting up properties", error);

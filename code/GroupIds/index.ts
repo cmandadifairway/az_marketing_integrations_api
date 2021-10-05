@@ -24,7 +24,7 @@ import { GroupIdsRequest } from "./model/groupIdsRequest";
  * @param context - azure function context
  * @param req - http request
  */
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const groupIds: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "GroupIds";
     await appInsightsService.setupProperties(context, functionName);
@@ -60,5 +60,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await groupIds(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

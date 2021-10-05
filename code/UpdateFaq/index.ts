@@ -19,7 +19,7 @@ import { UpdateFaqRequest } from "./model/updateFaqRequest";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { HelpFaqService } from "../shared/service/helpFaq/helpFaqService";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const updateFaq: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateFaq";
     await appInsightsService.setupProperties(context, functionName);
@@ -55,5 +55,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await updateFaq(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

@@ -1,4 +1,4 @@
-import httpTrigger from "./index";
+import { createBanner } from "./index";
 import { HttpRequestMockPost } from "./../mock/azure.mock";
 import { Banners } from "./../shared/service/banner/bannerService";
 import { ContextMock, InvalidHttpRequestMock } from "../mock/azure.mock";
@@ -10,7 +10,7 @@ describe("Create Banner", () => {
     });
 
     test("when input is empty", async () => {
-        await httpTrigger(ContextMock, InvalidHttpRequestMock);
+        await createBanner(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body.data).toEqual(undefined);
     });
 
@@ -29,7 +29,7 @@ describe("Create Banner", () => {
             .mockImplementation(async () => Promise.resolve(response));
         const reqMock = { ...HttpRequestMockPost };
         reqMock.body = request;
-        await httpTrigger(ContextMock, reqMock);
+        await createBanner(ContextMock, reqMock);
         expect(spy).toHaveBeenCalled();
         expect(ContextMock.res.body).toEqual(response);
     });

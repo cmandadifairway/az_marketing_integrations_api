@@ -1,10 +1,13 @@
 import * as appInsights from "applicationinsights";
-appInsights
-    .setup() // assuming ikey is in env var
-    .setAutoDependencyCorrelation(true, true)
-    .setAutoCollectDependencies(true)
-    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-    .start();
+const env = process.env.environment;
+if (env !== "unittest" && env !== "local") {
+    appInsights
+        .setup() // assuming ikey is in env var
+        .setAutoDependencyCorrelation(true, true)
+        .setAutoCollectDependencies(true)
+        .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
+        .start();
+}
 import { LoanOfficerResponse } from "./model/loanOfficerResponse";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
@@ -17,7 +20,7 @@ import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const loanOfficer: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
     await appInsightsService.setupProperties(context, functionName);
@@ -54,5 +57,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await loanOfficer(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

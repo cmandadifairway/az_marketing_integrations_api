@@ -19,7 +19,7 @@ import { ErrorService } from "../shared/service/errorHandling/error.service";
 import { UpdateLoGroupRequest } from "./model/updateLoGroupRequest";
 import { UpdateLoService } from "./service/updateLoGroup";
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export const updateLoGroup: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateLoGroup";
     await appInsightsService.setupProperties(context, functionName);
@@ -55,5 +55,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         };
     }
 };
-
-export default httpTrigger;
+export const httpTrigger: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
+    const correlationContext = appInsights.startOperation(context, req);
+    return appInsights.wrapWithCorrelationContext(async () => {
+        await updateLoGroup(context, req);
+        appInsights.defaultClient.flush();
+    }, correlationContext)();
+};

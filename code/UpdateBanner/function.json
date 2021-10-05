@@ -16,5 +16,6 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/UpdateBanner/index.js"
+    "scriptFile": "../dist/UpdateBanner/index.js",
+    "entryPoint": "httpTrigger"
 }

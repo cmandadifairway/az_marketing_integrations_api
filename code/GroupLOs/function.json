@@ -16,5 +16,6 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/GroupLOs/index.js"
+    "scriptFile": "../dist/GroupLOs/index.js",
+    "entryPoint": "httpTrigger"
 }

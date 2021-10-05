@@ -1,4 +1,4 @@
-import httpTrigger from "./index";
+import { updateLoGroup } from "./index";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostUpdateLoGroup } from "../mock/azure.mock";
 import { UpdateLoGroupService } from "./service/updateLoGroup";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -10,7 +10,7 @@ describe("Update LO Group index tests", () => {
     });
 
     test("when input is empty", async () => {
-        await httpTrigger(ContextMock, InvalidHttpRequestMock);
+        await updateLoGroup(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body).toEqual(ErrorService.invalidRequest);
     });
 
@@ -22,7 +22,7 @@ describe("Update LO Group index tests", () => {
             })
         );
 
-        await httpTrigger(ContextMock, HttpRequestMockPostUpdateLoGroup);
+        await updateLoGroup(ContextMock, HttpRequestMockPostUpdateLoGroup);
         expect(spy).toHaveBeenCalled();
         expect(ContextMock.res.body.data).toEqual("Successfully updated loan officer.");
         expect(ContextMock.res.body.Error).toBeFalsy();
