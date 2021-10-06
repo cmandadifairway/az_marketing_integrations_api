@@ -1,4 +1,4 @@
-import updateBanner from "./index";
+import httpTrigger from "./index";
 import { Banners } from "./../shared/service/banner/bannerService";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -10,7 +10,7 @@ describe("Update Banner", () => {
     });
 
     test("when input is empty", async () => {
-        await updateBanner(ContextMock, InvalidHttpRequestMock);
+        await httpTrigger(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body).toEqual(ErrorService.invalidRequest);
     });
 
@@ -30,7 +30,7 @@ describe("Update Banner", () => {
             expirationDate: "2024-07-23T14:00:00.000Z",
             username: "cmandadi",
         };
-        await updateBanner(ContextMock, reqMock);
+        await httpTrigger(ContextMock, reqMock);
         expect(spy).toHaveBeenCalled();
         expect(ContextMock.res.body).toEqual(response);
     });

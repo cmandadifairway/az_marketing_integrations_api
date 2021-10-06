@@ -15,7 +15,7 @@ import { Response } from "../shared/model/response";
  * @param context - azure function context
  * @param req - http request
  */
-const groupLos: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "GroupLOs";
     await appInsightsService.startService(context, functionName);
@@ -53,4 +53,4 @@ const groupLos: AzureFunction = async function (context: Context, req: HttpReque
     }
 };
 
-export default groupLos;
+export default httpTrigger;

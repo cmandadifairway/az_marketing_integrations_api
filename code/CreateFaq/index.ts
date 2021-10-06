@@ -9,7 +9,7 @@ import { CustomValidator } from "../shared/validators/customValidator";
 import { CreateFaqRequest } from "./model/createFaqRequest";
 import { HelpFaqService } from "../shared/service/helpFaq/helpFaqService";
 
-const createFaq: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "CreateFaq";
     await appInsightsService.startService(context, functionName);
@@ -46,4 +46,4 @@ const createFaq: AzureFunction = async function (context: Context, req: HttpRequ
     }
 };
 
-export default createFaq;
+export default httpTrigger;

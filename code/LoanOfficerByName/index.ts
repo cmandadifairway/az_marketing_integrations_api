@@ -9,7 +9,7 @@ import { loByNameRequest } from "./model/loByNameRequest";
 import { LOByNameService } from "./service/LOByName.service";
 import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
 
-const loByName: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficerByName";
     await appInsightsService.startService(context, functionName);
@@ -52,4 +52,4 @@ const loByName: AzureFunction = async function (context: Context, req: HttpReque
     }
 };
 
-export default loByName;
+export default httpTrigger;

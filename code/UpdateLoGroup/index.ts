@@ -9,7 +9,7 @@ import { ErrorService } from "../shared/service/errorHandling/error.service";
 import { UpdateLoGroupRequest } from "./model/updateLoGroupRequest";
 import { UpdateLoService } from "./service/updateLoGroup";
 
-const updateLoGroup: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateLoGroup";
     await appInsightsService.startService(context, functionName);
@@ -46,4 +46,4 @@ const updateLoGroup: AzureFunction = async function (context: Context, req: Http
     }
 };
 
-export default updateLoGroup;
+export default httpTrigger;

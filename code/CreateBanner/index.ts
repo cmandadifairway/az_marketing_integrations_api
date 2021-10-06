@@ -9,7 +9,7 @@ import { CustomValidator } from "../shared/validators/customValidator";
 import { BannerService } from "../shared/service/banner/bannerService";
 import { CreateBannerRequest } from "./model/createBannerRequest";
 
-const createBanner: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "CreateBanner";
     await appInsightsService.startService(context, functionName);
@@ -51,4 +51,4 @@ const createBanner: AzureFunction = async function (context: Context, req: HttpR
     }
 };
 
-export default createBanner;
+export default httpTrigger;

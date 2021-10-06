@@ -1,4 +1,4 @@
-import groupIds from "./index";
+import httpTrigger from "./index";
 import { ContextMock, HttpRequestMock } from "../mock/azure.mock";
 import { CampaignGroupService } from "../shared/service/groups/campaignGroup";
 import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
@@ -15,7 +15,7 @@ describe("Group Index", () => {
             .mockImplementation(async () => Promise.resolve(response));
         const reqMock = { ...HttpRequestMock };
         reqMock.query = { id: "tx" };
-        await groupIds(ContextMock, reqMock);
+        await httpTrigger(ContextMock, reqMock);
         expect(spy).toHaveBeenCalled();
         expect(ContextMock.res.body).toEqual(response);
         expect(ContextMock.res.body.Error).toBeFalsy();

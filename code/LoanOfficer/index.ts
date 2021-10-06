@@ -10,7 +10,7 @@ import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
-const loanOfficer: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
     await appInsightsService.startService(context, functionName);
@@ -52,4 +52,4 @@ const loanOfficer: AzureFunction = async function (context: Context, req: HttpRe
     }
 };
 
-export default loanOfficer;
+export default httpTrigger;
