@@ -1,4 +1,4 @@
-import { ContentHistory } from "./contentHistory";
+import { ContentHistory } from "./ContentHistory";
 
 export interface Banner {
     _id: string;

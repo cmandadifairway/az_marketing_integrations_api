@@ -1,28 +1,21 @@
-import { LoanOfficerResponse } from "./model/loanOfficerResponse";
+import { LoanOfficerResponse } from "../shared/model/loanOfficerResponse";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { CustomLogger } from "../shared/utils/customLogger.service";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
+import { CustomLogger } from "../shared/Logging/CustomLogger.service";
 import { Response } from "../shared/model/response";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { AppInsightsService } from "../shared/services/monitoring/applicationInsights";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { TYPES } from "../shared/inversify/types";
-import { LoanOfficerRequest } from "./model/loanOfficerRequest";
-import { LoanOfficerService } from "./service/LoanOfficer.service";
+import { LoanOfficerRequest } from "./Model/loanOfficerRequest";
+import { LoanOfficerService } from "../shared/services/loanOfficer/loanOfficerService";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.StartService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
-    /*customLogger.logData({
-        msg: `HTTP trigger function for ${functionName} requested.`,
-        request: req.query,
-    });*/
-    context.log(JSON.stringify({
-        msg: `HTTP trigger function for ${functionName} requested.`,
-        request: req.query,
-    }));
+    customLogger.logData({ msg: `HTTP trigger function for ${functionName} requested.`, request: req.query });
 
     let response: Response;
     let loanOfficerResponse: LoanOfficerResponse;
@@ -36,7 +29,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             throw new Error(`Error in request parameters: ${errors.join(";")}`);
         }
 
-        const loanOfficerService = container.get<LoanOfficerService>(TYPES.LoanOfficerServiceImpl);
+        const loanOfficerService = container.get<LoanOfficerService>(TYPES.LoanOfficerService);
         loanOfficerResponse = await loanOfficerService.getLoanOfficer(requestData.loEmail);
         customLogger.logData(loanOfficerResponse);
     } catch (error) {

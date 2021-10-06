@@ -1,13 +1,13 @@
-import { GroupLOResponse } from "./model/groupLOsResponse";
-import { GroupLOsRequest } from "./model/groupLOsRequest";
-import { GroupService } from "../shared/service/groups/group";
+import { GroupLOResponse } from "./Model/groupLOsResponse";
+import { GroupLOsRequest } from "./Model/groupLOsRequest";
+import { GroupService } from "../shared/services/groups/group";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { container } from "../inversify.config";
 import { TYPES } from "../shared/inversify/types";
-import { CustomLogger } from "../shared/utils/customLogger.service";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { CustomLogger } from "../shared/Logging/CustomLogger.service";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
+import { AppInsightsService } from "../shared/services/monitoring/applicationInsights";
 import { Response } from "../shared/model/response";
 
 /**
@@ -18,12 +18,9 @@ import { Response } from "../shared/model/response";
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "GroupLOs";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.StartService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
-    customLogger.logData({
-        msg: `HTTP trigger function for ${functionName} requested.`,
-        request: req.query,
-    });
+    customLogger.logData({ msg: `HTTP trigger function for ${functionName} requested.`, request: req.query });
 
     let groupLOResponse: GroupLOResponse;
     let response: Response;

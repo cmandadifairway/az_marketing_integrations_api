@@ -1,4 +1,4 @@
-import { LoanOfficer } from "../shared/model/loanOfficer";
+import { LoanOfficer } from "../shared/model/LoanOfficer";
 
 export const mockLoanOfficer: LoanOfficer = {
     _id: "fftestuser1@fairwaymc.com",

@@ -1,4 +1,4 @@
-import { CurrentLeadStatus } from "./currentLeadStatus";
+import { CurrentLeadStatus } from "./CurrentLeadStatus";
 
 export interface LeadStatus {
     type: CurrentLeadStatus;

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { ContentHistory } from "./contentHistory";
+import { ContentHistory } from "./ContentHistory";
 
 export interface CreateFaqDao {
     _id?: ObjectId;

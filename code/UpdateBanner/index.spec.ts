@@ -1,14 +1,9 @@
 import httpTrigger from "./index";
-import { Banners } from "./../shared/service/banner/bannerService";
+import { Banners } from "./../shared/services/banner/bannerService";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
 
 describe("Update Banner", () => {
-    beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
-    });
-
     test("when input is empty", async () => {
         await httpTrigger(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body).toEqual(ErrorService.invalidRequest);

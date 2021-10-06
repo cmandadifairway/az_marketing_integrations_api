@@ -7,16 +7,16 @@ module.exports = {
   output: {
     filename: "[name]/index.js",
     path: path.resolve(__dirname, "../dist/dist"),
-    libraryTarget: "commonjs" // IMPORTANT!
+    libraryTarget: "commonjs", // IMPORTANT!
   },
   plugins: [
     new CopyPlugin({
-      patterns:[
+      patterns: [
         { from: "*/function.json", to: "../" },
-        { from: "host.json", to: "../"},
-        { from: "package.json", to: "../"},
+        { from: "host.json", to: "../" },
+        { from: "package.json", to: "../" },
         { from: "package-lock.json", to: "../" },
-        { from: "proxies.json", to: "../"}
+        { from: "proxies.json", to: "../" },
       ],
     }),
   ],

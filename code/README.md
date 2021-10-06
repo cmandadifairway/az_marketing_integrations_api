@@ -1,37 +1,48 @@
-﻿This is the base template to create microservice azure function app project.
-What we get out of this template
-1) Basic set up which can help to set up azure pipeline and create required azure resources for the project.
-2) Health check URL
-3) Common code to access key vault, app configuration from azure.
-4) Common frameworks like logging, exception framework.
-5) Node-typescript coding standards.
-6) Jest framework integration for unit testing.
-7) Application insight configuration.
-8) Inversify integration for inversion of control (IoC) container for TypeScript and JavaScript apps.
-9) Webpack configuration.
+﻿# FairwayFirst Client-API
 
-NOTE:- HealthCheck URL is just a base url. Please change that to project specific.
-Ex-v1/health-check needs to be change to <<Project_base_Path>>/v1/health-check -> wires-bmo/v1/health-check
+This function app interacts with the FairwayFirst mobile application as well as the admin dashboard web app.
 
-Add below enteries to local.settings.json file to get functionapp up and running
+## Pre-Debugging
+Need the following installed:
+- Node major version 12 or higher
+- Azure Functions VS Code extension
+
+Need a local.settings.json file with the following
+```
 {
   "IsEncrypted": false,
   "Values": {
+    "environment": "local",
+    "FF--COSMOS--URL": "mongodb://cosmos-fim-infapp-dev-cus-ffinf:uacCsk9n39oc5WLANF8tBH9TekclsTGbrrYVIO3xgGfvQjt1g7el0n6lIWepmbVjfZpZLa0toS6kseeIJJD9Kw==@cosmos-fim-infapp-dev-cus-ffinf.mongo.cosmos.azure.com:10255/[database]?ssl=true",
+    "FF--COSMOS--NAME": "cosdb-fim-infapp-dev-cus-ffinf",
+    "KEY_VAULT_URL": "",
     "FUNCTIONS_WORKER_RUNTIME": "node",
-    "FUNCTIONS_V2_COMPATIBILITY_MODE": "true",
-    "APPINSIGHTS_INSTRUMENTATIONKEY": "123-345",
-    "environment":"local",
-    "LOG_LEVEL": "DEBUG"
+    "FF-SB-WEBHOOK-CONSTRING": "",
+    "FF-SB-NOTIFICATIONS-TOPIC": "topic-fim-dev-ffapi-notifications-retry",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
   }
 }
+```
+This does not include the necessary settings for the HomeBird API nor the FF-SB-WEBHOOK-CONSTRING value for the SendPushNotification API. Can reach out to Hannah Strachn if you need to test these APIs.
 
+The value for the notifications topic seen above is intentionally set to '...-retry' so that you do not pick up live service bus messages and do not see unnecessary errors. When needing to test with live messages, simply remove the '-retry' part.
 
+## Debugging
+This code has been integrated with VS Code for local debugging and utilizing break points.
 
-Please refer below confluence links for more details.
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/1637417281/NodeJS+Back+end+Coding+Standards
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/470089733/Setting+up+Azure+Functions+with+NodeJS
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/483721231/Microservices+Architecture
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/500793474/Serverless+Microservices+-+Fairway+Projects
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/503185525/Azure-NodeJs+application+Stacks
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/604569763/Exception+Framework-+nodeJs+Azure+Functions
-https://fairway.atlassian.net/wiki/spaces/APPDEV/pages/1095270454/Logging+using+Appinsight+in+Azure+Functions
+Go to the Run and Debug tab in VS Code and the drop down (at the top of the panel) should default to 'Attach to Node Functions'. Click 'Start Debugging' or F5 to kick off the process. It will install packages and run the app but first you may see a pop up with a message:
+>Failed to verify "AzureWebJobsStorage" connection specified in "local.settings.json".
+
+Just click the 'Debug anyway' button.
+
+Pay attention to the console. Sometimes it has been known to stop itself immediately after starting. It's random.
+
+## Package info
+This project includes express and it's only used during the webpack stage of a build. Seen when running command "npm run build:prod" locally.
+
+## License
+Fairway Independnet Mortgage

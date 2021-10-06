@@ -2,22 +2,19 @@ import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
 import { TYPES } from "../shared/inversify/types";
 import { Response } from "../shared/model/response";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
-import { CustomLogger } from "../shared/utils/customLogger.service";
+import { AppInsightsService } from "../shared/services/monitoring/applicationInsights";
+import { CustomLogger } from "../shared/Logging/CustomLogger.service";
 import { CustomValidator } from "../shared/validators/customValidator";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
 import { UpdateLoGroupRequest } from "./model/updateLoGroupRequest";
-import { UpdateLoService } from "./service/updateLoGroup";
+import { UpdateLoService } from "./services/updateLoGroup";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateLoGroup";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.StartService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
-    customLogger.logData({
-        msg: `HTTP trigger function for ${functionName} requested.`,
-        request: req.body,
-    });
+    customLogger.logData({ msg: `HTTP trigger function for ${functionName} requested.`, request: req.body });
 
     let response: Response;
     let status = 200;
@@ -38,11 +35,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         response = { data: ErrorService.getFriendlyErrorMsg(), Error: true };
     } finally {
         const headers = { "Content-Type": "application/json" };
-        context.res = {
-            headers: headers,
-            body: status === 400 ? ErrorService.invalidRequest : response,
-            status,
-        };
+        context.res = { headers: headers, body: status === 400 ? ErrorService.invalidRequest : response, status };
     }
 };
 

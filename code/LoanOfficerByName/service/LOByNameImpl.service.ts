@@ -1,8 +1,8 @@
 import { LOByNameService } from "./LOByName.service";
-import { ServiceBase } from "../../shared/service/serviceBase";
+import { ServiceBase } from "../../shared/services/serviceBase";
 import { TYPES } from "../../shared/inversify/types";
-import { LoanOfficerDataService } from "../../shared/service/loanOfficer/repository/loanOfficerDataAccess";
-import { LoanOfficerByNameResponse } from "../model/loanOfficerByNameResponse";
+import { LoanOfficerDataService } from "../../shared/services/loanOfficer/repository/loanOfficerDataAccess";
+import { LoanOfficerByNameResponse } from "../../shared/model/loanOfficerByNameResponse";
 
 export class LOByNameServiceImpl extends ServiceBase implements LOByNameService {
     private readonly loDataService = this.resolve<LoanOfficerDataService>(TYPES.LoanOfficerDataService);

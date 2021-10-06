@@ -1,13 +1,8 @@
 import httpTrigger from "./index";
 import { ContextMock, HttpRequestMock } from "../mock/azure.mock";
-import { CampaignGroupService } from "../shared/service/groups/campaignGroup";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { CampaignGroupService } from "../shared/services/groups/campaignGroup";
 
 describe("Group Index", () => {
-    beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
-    });
-
     test("Happy Path", async () => {
         const response = { data: ["All GroupIds"], Error: false };
         const spy = jest

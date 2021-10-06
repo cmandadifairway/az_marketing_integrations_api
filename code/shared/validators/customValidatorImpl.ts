@@ -1,13 +1,13 @@
 import { CustomValidator } from "./customValidator";
-import { ServiceBase } from "../service/serviceBase";
+import { ServiceBase } from "../services/serviceBase";
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { TYPES } from "../inversify/types";
-import { LoanOfficerResponse } from "../../LoanOfficer/model/loanOfficerResponse";
-import { LoanOfficerService } from "../../LoanOfficer/service/LoanOfficer.service";
+import { LoanOfficerResponse } from "../model/loanOfficerResponse";
+import { LoanOfficerService } from "../services/loanOfficer/loanOfficerService";
 
 export class CustomValidatorImpl extends ServiceBase implements CustomValidator {
-    private readonly loanOfficerService = this.resolve<LoanOfficerService>(TYPES.LoanOfficerServiceImpl);
+    private readonly loanOfficerService = this.resolve<LoanOfficerService>(TYPES.LoanOfficerService);
 
     /**
      * Converts the object into the given class
@@ -36,9 +36,7 @@ export class CustomValidatorImpl extends ServiceBase implements CustomValidator 
      */
     async convertAndValidate(schema: any, req: object): Promise<string[]> {
         if (req === null || req === undefined) req = {};
-        const request: object = plainToClass(schema, req, {
-            excludeExtraneousValues: true,
-        });
+        const request: object = plainToClass(schema, req, { excludeExtraneousValues: true });
         const errors = await validate(request);
         return errors.map(({ constraints }) => constraints[Object.keys(constraints)[0]]);
     }

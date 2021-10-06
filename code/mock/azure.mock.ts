@@ -137,10 +137,5 @@ export const HttpRequestMockPostUpdateLoGroup: HttpRequest = {
     params: null,
     query: null,
     url: null,
-    body: {
-        action: "remove",
-        groupType: "primary",
-        groupId: "State-TX",
-        loEmail: "test@email.com",
-    },
+    body: { action: "remove", groupType: "primary", groupId: "State-TX", loEmail: "test@email.com" },
 };

@@ -1,23 +1,20 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { CustomLogger } from "../shared/utils/customLogger.service";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
+import { CustomLogger } from "../shared/Logging/CustomLogger.service";
+import { AppInsightsService } from "../shared/services/monitoring/applicationInsights";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { TYPES } from "../shared/inversify/types";
-import { loByNameRequest } from "./model/loByNameRequest";
-import { LOByNameService } from "./service/LOByName.service";
-import { LoanOfficerByNameResponse } from "./model/loanOfficerByNameResponse";
+import { loByNameRequest } from "./Model/loByNameRequest";
+import { LOByNameService } from "./Service/LOByName.service";
+import { LoanOfficerByNameResponse } from "../shared/model/loanOfficerByNameResponse";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficerByName";
-    await appInsightsService.startService(context, functionName);
+    await appInsightsService.StartService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
-    customLogger.logData({
-        msg: `HTTP trigger function for ${functionName} requested.`,
-        request: req.query,
-    });
+    customLogger.logData({ msg: `HTTP trigger function for ${functionName} requested.`, request: req.query });
 
     // This api doesnt match because its called by 3rd party component
     let loanOfficers: any;
@@ -44,11 +41,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         loanOfficers = { data: ErrorService.getFriendlyErrorMsg(), Error: true };
     } finally {
         const headers = { "Content-Type": "application/json" };
-        context.res = {
-            headers: headers,
-            body: status === 400 ? ErrorService.invalidRequest : loanOfficers,
-            status,
-        };
+        context.res = { headers: headers, body: status === 400 ? ErrorService.invalidRequest : loanOfficers, status };
     }
 };
 

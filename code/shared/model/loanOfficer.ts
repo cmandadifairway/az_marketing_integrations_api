@@ -1,4 +1,4 @@
-import { AnalyticsData } from "./analyticsData";
+import { AnalyticsData } from "./AnalyticsData";
 
 export interface LoanOfficer {
     [key: number]: Year;

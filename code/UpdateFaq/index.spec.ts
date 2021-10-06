@@ -1,14 +1,9 @@
 import httpTrigger from "./index";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
-import { HelpFaq } from "../shared/service/helpFaq/helpFaqService";
-import { ErrorService } from "../shared/service/errorHandling/error.service";
-import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
+import { HelpFaq } from "../shared/services/helpFaq/helpFaqService";
+import { ErrorService } from "../shared/services/errorHandling/error.service";
 
 describe("Update Faq Index", () => {
-    beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
-    });
-
     test("when input is empty", async () => {
         await httpTrigger(ContextMock, InvalidHttpRequestMock);
         expect(ContextMock.res.body).toEqual(ErrorService.invalidRequest);
