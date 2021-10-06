@@ -1,4 +1,4 @@
-import { createBanner } from "./index";
+import createBanner from "./index";
 import { HttpRequestMockPost } from "./../mock/azure.mock";
 import { Banners } from "./../shared/service/banner/bannerService";
 import { ContextMock, InvalidHttpRequestMock } from "../mock/azure.mock";
@@ -6,7 +6,7 @@ import { AppInsightsService } from "../shared/service/monitoring/applicationInsi
 
 describe("Create Banner", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {

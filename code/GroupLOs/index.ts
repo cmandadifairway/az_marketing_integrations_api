@@ -1,13 +1,3 @@
-import * as appInsights from "applicationinsights";
-const env = process.env.environment;
-if (env !== "unittest" && env !== "local") {
-    appInsights
-        .setup() // assuming ikey is in env var
-        .setAutoDependencyCorrelation(true, true)
-        .setAutoCollectDependencies(true)
-        .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-        .start();
-}
 import { GroupLOResponse } from "./model/groupLOsResponse";
 import { GroupLOsRequest } from "./model/groupLOsRequest";
 import { GroupService } from "../shared/service/groups/group";
@@ -25,10 +15,10 @@ import { Response } from "../shared/model/response";
  * @param context - azure function context
  * @param req - http request
  */
-export const groupLos: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const groupLos: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "GroupLOs";
-    await appInsightsService.setupProperties(context, functionName);
+    await appInsightsService.startService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
@@ -62,10 +52,5 @@ export const groupLos: AzureFunction = async function (context: Context, req: Ht
         };
     }
 };
-export const httpTriggerGroupLos: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
-    const correlationContext = appInsights.startOperation(context, req);
-    return appInsights.wrapWithCorrelationContext(async () => {
-        await groupLos(context, req);
-        appInsights.defaultClient.flush();
-    }, correlationContext)();
-};
+
+export default groupLos;

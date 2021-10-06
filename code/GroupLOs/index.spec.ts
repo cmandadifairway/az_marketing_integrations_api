@@ -1,11 +1,11 @@
-import { groupLos } from "./index";
+import groupLos from "./index";
 import { ContextMock, HttpRequestMock } from "../mock/azure.mock";
 import { CampaignGroupService } from "../shared/service/groups/campaignGroup";
 import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 
 describe("Group LOs Index tests", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("Happy Path", async () => {

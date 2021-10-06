@@ -1,4 +1,4 @@
-import { createFaq } from "./index";
+import createFaq from "./index";
 import { HelpFaq } from "./../shared/service/helpFaq/helpFaqService";
 import { HttpRequestMockPost } from "./../mock/azure.mock";
 import { ContextMock, InvalidHttpRequestMock } from "../mock/azure.mock";
@@ -6,7 +6,7 @@ import { AppInsightsService } from "../shared/service/monitoring/applicationInsi
 
 describe("Create Faq", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {

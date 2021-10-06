@@ -1,13 +1,3 @@
-import * as appInsights from "applicationinsights";
-const env = process.env.environment;
-if (env !== "unittest" && env !== "local") {
-    appInsights
-        .setup() // assuming ikey is in env var
-        .setAutoDependencyCorrelation(true, true)
-        .setAutoCollectDependencies(true)
-        .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-        .start();
-}
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { AppInsightsService } from "../shared/service/monitoring/applicationInsights";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -19,10 +9,10 @@ import { UpdateFaqRequest } from "./model/updateFaqRequest";
 import { CustomValidator } from "../shared/validators/customValidator";
 import { HelpFaqService } from "../shared/service/helpFaq/helpFaqService";
 
-export const updateFaq: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const updateFaq: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "UpdateFaq";
-    await appInsightsService.setupProperties(context, functionName);
+    await appInsightsService.startService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
     customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
@@ -55,10 +45,5 @@ export const updateFaq: AzureFunction = async function (context: Context, req: H
         };
     }
 };
-export const httpTriggerUpdateFaq: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
-    const correlationContext = appInsights.startOperation(context, req);
-    return appInsights.wrapWithCorrelationContext(async () => {
-        await updateFaq(context, req);
-        appInsights.defaultClient.flush();
-    }, correlationContext)();
-};
+
+export default updateFaq;

@@ -16,6 +16,5 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/GroupLOs/index.js",
-    "entryPoint": "httpTriggerGroupLos"
+    "scriptFile": "../dist/GroupLOs/index.js"
 }

@@ -16,6 +16,5 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/GroupIds/index.js",
-    "entryPoint": "httpTriggerGroupIds"
+    "scriptFile": "../dist/GroupIds/index.js"
 }

@@ -1,4 +1,4 @@
-import { updateFaq } from "./index";
+import updateFaq from "./index";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostwithID } from "../mock/azure.mock";
 import { HelpFaq } from "../shared/service/helpFaq/helpFaqService";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -6,7 +6,7 @@ import { AppInsightsService } from "../shared/service/monitoring/applicationInsi
 
 describe("Update Faq Index", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {

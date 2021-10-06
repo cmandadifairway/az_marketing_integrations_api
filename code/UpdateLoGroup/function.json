@@ -14,6 +14,5 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/UpdateLoGroup/index.js",
-    "entryPoint": "httpTriggerUpdateLoGroup"
+    "scriptFile": "../dist/UpdateLoGroup/index.js"
 }

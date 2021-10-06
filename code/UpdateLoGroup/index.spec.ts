@@ -1,4 +1,4 @@
-import { updateLoGroup } from "./index";
+import updateLoGroup from "./index";
 import { ContextMock, InvalidHttpRequestMock, HttpRequestMockPostUpdateLoGroup } from "../mock/azure.mock";
 import { UpdateLoGroupService } from "./service/updateLoGroup";
 import { ErrorService } from "../shared/service/errorHandling/error.service";
@@ -6,7 +6,7 @@ import { AppInsightsService } from "../shared/service/monitoring/applicationInsi
 
 describe("Update LO Group index tests", () => {
     beforeAll(() => {
-        jest.spyOn(AppInsightsService.prototype, "setupProperties").mockImplementation(async () => Promise.resolve());
+        jest.spyOn(AppInsightsService.prototype, "startService").mockImplementation(async () => Promise.resolve());
     });
 
     test("when input is empty", async () => {
