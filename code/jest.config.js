@@ -17,6 +17,5 @@ module.exports = {
     setupFiles: [
         "<rootDir>/mock/setEnvVars.js",
         "<rootDir>/inversify.config.ts"
-    ],
-    testEnvironment: "node"
+    ]
 }
