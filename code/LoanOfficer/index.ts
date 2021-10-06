@@ -1,13 +1,3 @@
-import * as appInsights from "applicationinsights";
-const env = process.env.environment;
-if (env !== "unittest" && env !== "local") {
-    appInsights
-        .setup() // assuming ikey is in env var
-        .setAutoDependencyCorrelation(true, true)
-        .setAutoCollectDependencies(true)
-        .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-        .start();
-}
 import { LoanOfficerResponse } from "./model/loanOfficerResponse";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { container } from "../inversify.config";
@@ -20,15 +10,19 @@ import { TYPES } from "../shared/inversify/types";
 import { LoanOfficerRequest } from "./model/loanOfficerRequest";
 import { LoanOfficerService } from "./service/LoanOfficer.service";
 
-export const loanOfficer: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const loanOfficer: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const appInsightsService: AppInsightsService = container.get<AppInsightsService>(TYPES.AppInsightsService);
     const functionName = "LoanOfficer";
-    await appInsightsService.setupProperties(context, functionName);
+    await appInsightsService.startService(context, functionName);
     const customLogger = container.get<CustomLogger>(TYPES.CustomLogger);
-    customLogger.logData({
+    /*customLogger.logData({
         msg: `HTTP trigger function for ${functionName} requested.`,
         request: req.query,
-    });
+    });*/
+    context.log(JSON.stringify({
+        msg: `HTTP trigger function for ${functionName} requested.`,
+        request: req.query,
+    }));
 
     let response: Response;
     let loanOfficerResponse: LoanOfficerResponse;
@@ -57,10 +51,5 @@ export const loanOfficer: AzureFunction = async function (context: Context, req:
         };
     }
 };
-export const httpTriggerLo: AzureFunction = async function contextPropagatingHttpTrigger(context: Context, req: HttpRequest) {
-    const correlationContext = appInsights.startOperation(context, req);
-    return appInsights.wrapWithCorrelationContext(async () => {
-        await loanOfficer(context, req);
-        appInsights.defaultClient.flush();
-    }, correlationContext)();
-};
+
+export default loanOfficer;
