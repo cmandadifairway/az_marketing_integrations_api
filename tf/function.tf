@@ -39,7 +39,7 @@ resource "azurerm_function_app" "ffadmin" {
   storage_account_access_key = azurerm_storage_account.ffadmin.primary_access_key
   https_only                 = "true"
   version                    = "~3"
-  enable_builtin_logging     = "false"
+  enable_builtin_logging     = "true"
   tags = merge(
 
     local.settings.default_tags,
