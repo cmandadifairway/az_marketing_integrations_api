@@ -29,7 +29,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             throw new Error(`Error in request parameters: ${errors.join(";")}`);
         }
 
-        const loByNameService = container.get<LOByNameService>(TYPES.LOByNameServiceImpl);
+        const loByNameService = container.get<LOByNameService>(TYPES.LOByNameService);
         loanOfficerByNameResponse = await loByNameService.getLoanOfficerByName(requestData.loName);
         loanOfficers = loanOfficerByNameResponse.data;
         customLogger.logData(loanOfficers);

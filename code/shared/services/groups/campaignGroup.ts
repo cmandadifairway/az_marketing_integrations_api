@@ -9,8 +9,8 @@ import { GroupLOsRequest } from "../../../GroupLOs/Model/groupLOsRequest";
 export class CampaignGroupService extends ServiceBase implements GroupService {
     private readonly groupDataAccess = this.resolve<GroupDataAccess>(TYPES.CampaignGroupDataAccess);
 
-    async getGroupIds(queryFilter?: Object): Promise<Response> {
-        return await this.groupDataAccess.getGroupIds(queryFilter);
+    async getGroupIds(): Promise<Response> {
+        return await this.groupDataAccess.getGroupIds();
     }
 
     async getGroupLOs(queryFilter: GroupLOsRequest): Promise<GroupLOResponse> {

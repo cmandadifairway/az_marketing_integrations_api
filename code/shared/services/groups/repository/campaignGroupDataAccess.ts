@@ -2,33 +2,27 @@ import { DataAccessBase } from "../../dataAccessBase";
 import { GroupLOResponse } from "./../../../../GroupLOs/Model/groupLOsResponse";
 import { GroupDataAccess } from "./groupDataAccess";
 import { ReadPreference } from "mongodb";
-import { TYPES } from "../../../inversify/types";
 import { Response } from "../../../model/response";
 import { GroupLOsRequest } from "../../../../GroupLOs/Model/groupLOsRequest";
 import { GroupLO } from "../../../../GroupLOs/Model/groupLOsResponse";
-import { UtilityService } from "../../../utils/utility.service";
 
 /**
  * This class contains all the methods related to LO groups
  * This class is inversified. For singleton instance use container.get<>
  */
 export class CampaignGroupDataAccess extends DataAccessBase implements GroupDataAccess {
-    private readonly utility = this.resolve<UtilityService>(TYPES.UtilityService);
-
     /**
      * Gets Loan Officer GroupIds
-     * @param queryFilter - query to filter groupIds
      * @usage url/groupIds?_id=TX
      */
-    async getGroupIds(queryFilter?: Object): Promise<Response> {
+    async getGroupIds(): Promise<Response> {
         let response: Response;
         let groupIds: string[];
         try {
             const db = await this.dbConnectionService.getDbConfiguration();
-            const _queryFilter = this.buildQueryFilter(queryFilter);
             groupIds = await db
                 .collection("groups", { readPreference: ReadPreference.SECONDARY_PREFERRED })
-                .distinct<string>("_id", _queryFilter);
+                .distinct<string>("_id", {});
             response = { data: groupIds, Error: false };
         } catch (error) {
             this.customLogger.error("Error while getting group ids from repo", error);
@@ -60,24 +54,5 @@ export class CampaignGroupDataAccess extends DataAccessBase implements GroupData
             throw error;
         }
         return groupLOResponse;
-    }
-
-    /**
-     * Formats query for mongodb collection
-     * @param queryFilter
-     */
-    private buildQueryFilter(queryFilter?: Object) {
-        let _queryFilter = {};
-        if (queryFilter) {
-            const _id = this.utility.convertNullToString(queryFilter["id"]);
-            if (_id !== "") {
-                _queryFilter = {
-                    _id: {
-                        $regex: new RegExp(`.*${_id}.*`, "i"),
-                    },
-                };
-            }
-        }
-        return _queryFilter;
     }
 }
