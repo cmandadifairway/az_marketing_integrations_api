@@ -1,15 +1,10 @@
-import { BlobServiceClient } from "@azure/storage-blob";
 import { ServiceBase } from "../services/serviceBase";
-import { TYPES } from "../inversify/types";
-import { AppConfigService } from "../services/appConfiguration/appConfig.service";
 import { UtilityService } from "./utility.service";
 
 /**
  * Utility class
  */
 export class Utility extends ServiceBase implements UtilityService {
-    private readonly appConfigService = this.resolve<AppConfigService>(TYPES.AppConfigService);
-
     /**
      * Returns today's date in current timezone
      */
@@ -187,48 +182,6 @@ export class Utility extends ServiceBase implements UtilityService {
             });
             readableStream.on("error", reject);
         });
-    }
-
-    /**
-     * Reads the file from given path
-     * @param path
-     */
-    async readFileAsBase64(path: string): Promise<any> {
-        const fs = require("fs");
-        try {
-            const rawData = await fs.readFileSync(path.replace(/\//g, "\\"), { encoding: "base64" });
-            return rawData;
-        } catch (err) {
-            this.customLogger.error("Error during utility readFileAsBase64", err);
-        }
-        return null;
-    }
-
-    public async getFileFromBlobStorage(fileName: string): Promise<string> {
-        try {
-            const environment = this.appConfigService.getConfiguration("environment");
-            if (environment === "local") {
-                // load file locally
-                const path = require("path");
-                const filePath = path.resolve(__dirname, `../../../../files/${fileName}`);
-                return await this.readFileAsBase64(filePath);
-            } else {
-                let AZURE_STORAGE_CONNECTION_STRING: string =
-                    this.appConfigService.getConfiguration("AzureWebJobsStorage");
-                // Create the BlobServiceClient object which will be used to create a container client
-                const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
-                // Create a unique name for the container
-                const containerName = "files";
-                // Get a reference to a container
-                const containerClient = blobServiceClient.getContainerClient(containerName);
-                const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-                const buffer: Buffer = await blockBlobClient.downloadToBuffer(0);
-                return buffer.toString("base64");
-            }
-        } catch (error) {
-            this.customLogger.error("Error during utility getFileFromBlobStorage", error);
-            throw error;
-        }
     }
 
     public getDistinctValues(array: any[], key: string, sort?: boolean): string[] {

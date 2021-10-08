@@ -6,8 +6,6 @@ import { CustomLogger } from "../shared/Logging/CustomLogger.service";
 import { AppInsightsService } from "../shared/services/monitoring/applicationInsights";
 import { Response } from "../shared/model/response";
 import { TYPES } from "../shared/inversify/types";
-import { CustomValidator } from "../shared/validators/customValidator";
-import { GroupIdsRequest } from "./Model/groupIdsRequest";
 
 /**
  * This api endpoint returns loan officer group ids
@@ -24,16 +22,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     let response: Response;
     let status = 200;
     try {
-        const customValidator = container.get<CustomValidator>(TYPES.CustomValidator);
-        const requestData: GroupIdsRequest = customValidator.convertToClass(GroupIdsRequest, req.query);
-        const errors = await customValidator.validate(requestData);
-        if (errors.length > 0) {
-            status = 400;
-            throw new Error(`Error in request parameters: ${errors.join(";")}`);
-        }
-
         const groupsService = container.get<GroupService>(TYPES.CampaignGroupService);
-        response = await groupsService.getGroupIds(requestData);
+        response = await groupsService.getGroupIds();
         customLogger.info("Fetched GroupIds successfully");
     } catch (error) {
         customLogger.error(`${functionName} httpTrigger`, error);

@@ -1,8 +1,6 @@
 import { ServiceBase } from "../serviceBase";
 import { CreateFaqDao } from "../../model/createFaqDao";
 import { CreateFaqRequest } from "../../../CreateFaq/Model/createFaqRequest";
-import { HelpFaqRequest } from "../../../HelpFaq/Model/helpFaqRequest";
-import { HelpFaqResponse } from "../../../HelpFaq/Model/helpFaqResponse";
 import { FaqDetailsDao } from "../../model/faqDetailsDao";
 import { TYPES } from "../../inversify/types";
 import { HelpFaqDataService } from "./repository/helpFaqDataAccess";
@@ -10,18 +8,12 @@ import { Response } from "../../../shared/model/response";
 import { UpdateFaqRequest } from "../../../UpdateFaq/Model/updateFaqRequest";
 
 export interface HelpFaqService {
-    getFaqs(data: HelpFaqRequest): Promise<HelpFaqResponse>;
     createFaq(data: CreateFaqRequest): Promise<Response>;
     updateFaq(data: UpdateFaqRequest): Promise<Response>;
 }
 
 export class HelpFaq extends ServiceBase implements HelpFaqService {
     private readonly helpFaqDataService = this.resolve<HelpFaqDataService>(TYPES.HelpFaqDataService);
-
-    async getFaqs(data: HelpFaqRequest): Promise<HelpFaqResponse> {
-        let forMobile: boolean = data.mobile === "true";
-        return await this.helpFaqDataService.getFaqs(data, forMobile);
-    }
 
     async createFaq(data: CreateFaqRequest): Promise<Response> {
         const getDate = new Date(Date.now());

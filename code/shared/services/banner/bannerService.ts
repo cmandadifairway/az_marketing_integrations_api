@@ -1,7 +1,6 @@
 import { ServiceBase } from "../serviceBase";
 import { ObjectId } from "mongodb";
-import { BannerRequest } from "../../../Banners/Model/bannerRequest";
-import { BannerResponse } from "../../../Banners/Model/bannerResponse";
+import { BannerResponse } from "../../../shared/model/bannerResponse";
 import { CreateBannerRequest } from "../../../CreateBanner/Model/createBannerRequest";
 import { UpdateBannerRequest } from "../../../UpdateBanner/Model/updateBannerRequest";
 import { TYPES } from "../../inversify/types";
@@ -11,16 +10,10 @@ import { BannerDataService } from "./repository/bannerDataAccess";
 export interface BannerService {
     createBanner(data: CreateBannerRequest): Promise<BannerResponse>;
     updateBanner(data: UpdateBannerRequest): Promise<BannerResponse>;
-    getBanners(data: BannerRequest): Promise<BannerResponse>;
 }
 
 export class Banners extends ServiceBase implements BannerService {
     private readonly bannerDataService = this.resolve<BannerDataService>(TYPES.BannerDataService);
-
-    async getBanners(data: BannerRequest): Promise<BannerResponse> {
-        let forMobile: boolean = data.mobile === "true";
-        return await this.bannerDataService.getBanners(forMobile);
-    }
 
     async createBanner(data: CreateBannerRequest): Promise<BannerResponse> {
         const id = new ObjectId();

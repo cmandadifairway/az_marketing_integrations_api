@@ -14,6 +14,5 @@ export interface UtilityService {
     isDate: (dateStr: string) => boolean;
     convertStringToDate: (dateStr: string) => Date;
     isNumber: (x: any) => boolean;
-    getFileFromBlobStorage: (fileName: string) => Promise<string>;
     getDistinctValues: (array: any[], key: string, sort?: boolean) => string[];
 }

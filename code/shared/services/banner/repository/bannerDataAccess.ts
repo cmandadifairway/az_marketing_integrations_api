@@ -1,52 +1,14 @@
-import { Banner } from "./../../../model/banner";
 import { DataAccessBase } from "../../dataAccessBase";
-import { ObjectId, ReadPreference } from "mongodb";
+import { ObjectId } from "mongodb";
 import { BannerDao } from "../../../model/bannerDao";
-import { BannerResponse } from "../../../../Banners/Model/bannerResponse";
+import { BannerResponse } from "../../../../shared/model/bannerResponse";
 
 export interface BannerDataService {
     createBanner: (data: BannerDao) => Promise<BannerResponse>;
     updateBanner: (data: BannerDao) => Promise<BannerResponse>;
-    getBanners: (forMobile: boolean) => Promise<BannerResponse>;
 }
 
 export class BannerDataAccess extends DataAccessBase implements BannerDataService {
-    async getBanners(mobile: boolean): Promise<BannerResponse> {
-        let bannerResponse: BannerResponse;
-        try {
-            const db = await this.dbConnectionService.getDbConfiguration();
-            const query = this.buildGetBannerQuery(mobile);
-
-            let banner: Banner | Banner[];
-
-            if (mobile) {
-                const projection = {
-                    bannerMessage: 1,
-                    bannerUrl: 1,
-                    viewLimit: 1,
-                    expirationDate: 1,
-                };
-                banner = await db
-                    .collection("helpFaqs", { readPreference: ReadPreference.SECONDARY_PREFERRED })
-                    .findOne<Banner>(query, { projection });
-            } else {
-                banner = await db
-                    .collection("helpFaqs", { readPreference: ReadPreference.SECONDARY_PREFERRED })
-                    .find<Banner>(query)
-                    .toArray();
-            }
-
-            bannerResponse = {
-                data: banner,
-                Error: false,
-            };
-        } catch (error) {
-            this.customLogger.error("Error while creating banner in BannerDataAccess", error);
-            throw error;
-        }
-        return bannerResponse;
-    }
-
     async createBanner(data: BannerDao): Promise<BannerResponse> {
         let response: BannerResponse;
         try {
@@ -92,19 +54,6 @@ export class BannerDataAccess extends DataAccessBase implements BannerDataServic
             throw error;
         }
         return response;
-    }
-
-    private buildGetBannerQuery(forMobile: boolean): object {
-        let obj = {
-            category: "banner",
-        };
-        if (forMobile) {
-            obj["expirationDate"] = {
-                $gt: new Date(Date.now()),
-            };
-            obj["active"] = true;
-        }
-        return obj;
     }
 
     private buildUpdateBannerQuery(data: BannerDao): object {
