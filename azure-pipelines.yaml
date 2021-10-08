@@ -5,7 +5,6 @@ trigger:
     include:
     - release
     - develop
-    - remove-apis
     - feature/*
   paths:
     exclude:
@@ -25,7 +24,7 @@ stages:
 - stage: Release_Development
   displayName: Release To Development
   dependsOn: build
-  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/release'), eq(variables['build.sourceBranch'], 'refs/heads/remove-apis')))
+  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/release')))
   jobs:
   - template: templates/deploy.yaml
     parameters:
