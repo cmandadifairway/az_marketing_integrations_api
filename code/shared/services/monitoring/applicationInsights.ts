@@ -1,4 +1,6 @@
 import * as appInsights from "applicationinsights";
+import aiSender from "applicationinsights/out/Library/Sender";
+aiSender.USE_ICACLS = false;
 import { Context } from "@azure/functions";
 import { ConfigBase } from "../serviceBase";
 import { TYPES } from "../../inversify/types";
