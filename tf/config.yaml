@@ -8,7 +8,3 @@ default_tags:
   Owner-email: jessica.manna@fairwaymc.com
   pid: n/a
   Expiration: n/a
-acmglobal: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-core/providers/Microsoft.AppConfiguration/configurationStores/acm-fim-infapp-prd-cus-global
-global-config-endpoint: https://acm-fim-infapp-prd-cus-global.azconfig.io
-acmglobalsecondary: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-core/providers/Microsoft.AppConfiguration/configurationStores/acm-fim-infapp-prd-eus2-global
-global-config-endpoint-secondary: https://acm-fim-infapp-prd-eus2-global.azconfig.io
