@@ -37,7 +37,6 @@
         "@azure/keyvault-secrets": "4.3.0",
         "@azure/storage-blob": "12.7.0",
         "applicationinsights": "2.1.8",
-        "applicationinsights-native-metrics": "0.0.6",
         "class-transformer": "0.4.0",
         "class-validator": "0.13.1",
         "express": "4.17.1",
