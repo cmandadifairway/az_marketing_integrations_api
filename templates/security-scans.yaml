@@ -47,9 +47,8 @@
         Set-ExecutionPolicy AllSigned -Scope Process -Force
         iex ((New-Object System.Net.WebClient).DownloadString(’https://download.srcclr.com/ci.ps1'))
         $scan = (srcclr scan)
-        $results = ($scan | Select-Object -Skip 26 -First 1)
-        $resultsNum = $results.TrimStart("High Risk Vulnerabilities                      ")
-        if ($resultsNum -ne "0"){
+        $results = ($scan | Select-String -Pattern "High Risk Vulnerabilities                      " -CaseSensitive -SimpleMatch | foreach{$_.ToString().TrimStart("High Risk Vulnerabilities                      ")})
+        if ($results -ne "0"){
         $scan
         throw "There were High Risk Vulnerabilities found"
         }
