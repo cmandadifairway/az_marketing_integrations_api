@@ -12,6 +12,10 @@ trigger:
     - tf/README.md
   batch: true
 stages:
+- stage: securityscan
+  displayName: Run Security Scans
+  jobs:
+  - template: templates/security-scans.yaml
 - stage: build
   displayName: Build, Analyze, and Publish Artifacts
   jobs:

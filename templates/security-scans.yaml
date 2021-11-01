@@ -1,0 +1,69 @@
+﻿jobs:
+  - job: Security_Scans
+    pool:
+      vmImage: windows-latest
+    variables:
+      - group: InfraVar-Dev
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Download Source Code'
+      inputs:
+        TargetFolder: '$(build.artifactstagingdirectory)'
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/code/'
+        includeRootFolder: false
+        flattenFolders: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/securityscan/$(Build.BuildNumber).zip'
+        replaceExistingArchive: true
+    - task: Veracode@3
+      inputs:
+        ConnectionDetailsSelection: 'Endpoint'
+        AnalysisService: 'Veracode'
+        veracodeAppProfile: '$(Build.Repository.Name)'
+        version: '$(build.buildNumber)'
+        filepath: '$(Build.ArtifactStagingDirectory)/securityscan/$(Build.BuildNumber).zip'
+        createProfile: true
+        failTheBuildIfVeracodeScanDidNotInitiate: false #Breaking the build here can cause long pipeline runs.
+        maximumWaitTime: '360'
+    - powershell: |
+        #############################
+        # Turn off Progress Bar
+        #############################
+        $OriginalPref = $ProgressPreference
+        $ProgressPreference = “SilentlyContinue”
+        #############################
+        # Set SCM Variables for NON GIT repo
+        #############################
+        $Env:SRCCLR_SCM_URI += (“https://bitbucket.org/$(build.Repository.Name)“)
+        $Env:SRCCLR_SCM_REF += "$(Build.SourceBranch)"
+        $Env:SRCCLR_SCM_REF_TYPE += "branch"
+        $Env:SRCCLR_SCM_REV += $(build.buildNumber)
+        $Env:SRCCLR_SCOPE += "production"
+        ################################
+        # EXECUTE SCA COMMANDS
+        ################################
+        Set-ExecutionPolicy AllSigned -Scope Process -Force
+        iex ((New-Object System.Net.WebClient).DownloadString(’https://download.srcclr.com/ci.ps1'))
+        $scan = (srcclr scan)
+        $results = ($scan | Select-Object -Skip 26 -First 1)
+        $resultsNum = $results.TrimStart("High Risk Vulnerabilities                      ")
+        if ($resultsNum -ne "0"){
+        $scan
+        throw "There were High Risk Vulnerabilities found"
+        }
+        else {
+         $scan
+        }
+        ############################
+        # TURN ON PROGRESS BAR AGAIN
+        ############################
+        $ProgressPreference = $OriginalPref
+
+      errorActionPreference: stop
+      displayName: 'Veracode SCA Agent Scan'
+      workingDirectory: '$(build.artifactstagingdirectory)\code'
+      continueOnError: true #This allows the subsequent pipelines to run without failing the build due to High Risk Vulnerabilities
+      env:
+        SRCCLR_API_TOKEN: $(AZDO--VERACODE--SRCCLR)
