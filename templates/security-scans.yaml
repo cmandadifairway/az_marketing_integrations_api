@@ -27,6 +27,7 @@
         createProfile: true
         failTheBuildIfVeracodeScanDidNotInitiate: false #Breaking the build here can cause long pipeline runs.
         maximumWaitTime: '360'
+        optargs: '-teams IT Applications Development'
     - powershell: |
         #############################
         # Turn off Progress Bar
