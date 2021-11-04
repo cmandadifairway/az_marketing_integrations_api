@@ -2,18 +2,12 @@
 version: v1.22.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-JS-AXIOS-1579269:
-    - '@azure/identity > @azure/msal-node > axios':
-        reason: Exception granted
-        expires: '2021-11-18T14:39:46.640Z'
-    - '@azure/identity > axios':
-        reason: Exception granted
-        expires: '2021-11-18T14:39:46.640Z'
-    - axios:
+  SNYK-JS-VALIDATOR-1090600:
+    - class-validator > validator:
         reason: exception granted by infosec
-        expires: '2021-11-18T14:39:46.640Z'
+        expires: '2021-12-04T21:31:43.664Z'
   SNYK-JS-CLASSVALIDATOR-1730566:
     - class-validator:
         reason: exception granted by infosec
-        expires: '2021-11-18T14:39:46.640Z'
+        expires: '2021-12-04T21:31:43.664Z'
 patch: {}
