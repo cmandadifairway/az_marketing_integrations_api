@@ -83,15 +83,15 @@ jobs:
       inputs:
         SonarCloud: 'Sonarcloud'
         organization: 'fairwaymtg'
-    - task: Snyk.snyk-security-scan.custom-build-release-task.SnykSecurityScan@0
-      displayName: 'Snyk scan for open source vulnerabilities'
-      inputs:
-        serviceConnectionEndpoint: Snyk
-        targetFile: '$(Build.SourcesDirectory)/code/package.json'
-        projectName: '$(Build.Repository.Name)'
-        organization: 'fairway-independent-mortgage-corporation'
-        failOnIssues: true
-        additionalArguments: -d --policy-path=$(Build.SourcesDirectory)/.snyk
+    # - task: Snyk.snyk-security-scan.custom-build-release-task.SnykSecurityScan@0
+    #   displayName: 'Snyk scan for open source vulnerabilities'
+    #   inputs:
+    #     serviceConnectionEndpoint: Snyk
+    #     targetFile: '$(Build.SourcesDirectory)/code/package.json'
+    #     projectName: '$(Build.Repository.Name)'
+    #     organization: 'fairway-independent-mortgage-corporation'
+    #     failOnIssues: true
+    #     additionalArguments: -d --policy-path=$(Build.SourcesDirectory)/.snyk
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/code/dist/'
