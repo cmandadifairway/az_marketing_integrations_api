@@ -15,6 +15,8 @@ export interface LoanOfficer {
     qualifiedLeadsNum: number;
     campaignGroup?: Array<string>;
     backupGroup: Array<string>;
+    leadPreference?: string;
+    leadPreferenceDt?: string;
 }
 
 export interface Year {
