@@ -10,7 +10,6 @@ export interface HelpFaqDataService {
 }
 
 export class HelpFaqDataAccess extends DataAccessBase implements HelpFaqDataService {
-
     async createFaq(data: CreateFaqDao): Promise<Response> {
         let response: Response;
         try {

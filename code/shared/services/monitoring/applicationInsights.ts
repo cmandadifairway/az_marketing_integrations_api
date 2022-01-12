@@ -1,6 +1,4 @@
 import * as appInsights from "applicationinsights";
-import aiSender from "applicationinsights/out/Library/Sender";
-aiSender.USE_ICACLS = false;
 import { Context } from "@azure/functions";
 import { ConfigBase } from "../serviceBase";
 import { TYPES } from "../../inversify/types";
@@ -22,12 +20,14 @@ export class AppInsightsService extends ConfigBase {
                     .setAutoCollectExceptions(true)
                     .setAutoCollectDependencies(true)
                     .setAutoCollectConsole(true)
-                    .setUseDiskRetryCaching(false)
-                    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
-                    .start();
-                const appInsightClient = appInsights.defaultClient;
-                let requestId: string = context.invocationId;
-                appInsightClient.commonProperties["requestId"] = requestId;
+                    .setUseDiskRetryCaching(true)
+                    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C);
+
+                const appInsightClient: appInsights.TelemetryClient = appInsights.defaultClient;
+                appInsightClient.setAutoPopulateAzureProperties(true);
+                appInsights.start();
+
+                appInsightClient.commonProperties["requestId"] = context.invocationId;
                 appInsightClient.commonProperties["function"] = functionName;
                 appInsightClient.commonProperties["APPINFO"] = "APPINFO::";
                 // Use this with "tagOverrides" to correlate custom telemetry to the parent function invocation.
