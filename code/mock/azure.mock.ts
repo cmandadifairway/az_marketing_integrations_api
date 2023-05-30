@@ -71,12 +71,3 @@ export const HttpRequestMockHealthCheck: HttpRequest = {
     url: null,
     body: null,
 };
-
-export const HttpRequestMockPostUpdateLoGroup: HttpRequest = {
-    method: "POST",
-    headers: null,
-    params: null,
-    query: null,
-    url: null,
-    body: { action: "remove", groupType: "primary", groupId: "State-TX", loEmail: "test@email.com" },
-};

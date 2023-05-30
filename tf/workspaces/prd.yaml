@@ -1,35 +1,48 @@
 ﻿environment: prd
-loglevel: INFO
 subscription_id: a7b1e7e0-020d-44d1-b0b9-759379b7cbfc
 spn_id: f69c00c8-85b0-4d50-a854-210c49b06e34
 spn_oid: c535db37-0896-4ff0-baca-0f775755fb5e
-opsadmin_oid: 428df686-64d1-485f-aa41-f3a3960d31fc
-opsengineer_oid: ed1e1140-02ef-43eb-ba40-8c8f3aead742
 tags:
-  pid: n/a
-  Expiration: n/a
-  Environment: Production
-location: centralus
-locabbrev: cus
+    pid: n/a
+    Expiration: n/a
+    Environment: Production
+rbac_enabled: 0
+adls: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-cus-dataauto/providers/Microsoft.Storage/storageAccounts/dlsfimappcusdataauto
 log_analytics: law-fim-infapp-prd-eus-aa
 log_analytics_rg: rg-fim-infapp-prd-aa
-rbac_enabled: 0
-acmglobal: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-core/providers/Microsoft.AppConfiguration/configurationStores/acm-fim-infapp-prd-cus-global
-global-config-endpoint: https://acm-fim-infapp-prd-cus-global.azconfig.io
-acmglobalsecondary: /subscriptions/a7b1e7e0-020d-44d1-b0b9-759379b7cbfc/resourceGroups/rg-fim-infapp-prd-core/providers/Microsoft.AppConfiguration/configurationStores/acm-fim-infapp-prd-eus2-global
-global-config-endpoint-secondary: https://acm-fim-infapp-prd-eus2-global.azconfig.io
-ip_restrictions:
-  - 209.163.181.85/32 #Citrix Colo
-  - 209.163.181.66/30 #Prod Colo
-  - 4.14.128.2/30 #Prod Marsh
-  - 97.105.87.2/30 #DR Marsh
-  - 74.116.196.66/30 #DR Citrix
-  - 38.68.11.40/32 #DR COLO
-  - 38.68.11.2/32 #VPN
-  - 4.17.92.2/32 #VPN
-  - 208.184.31.194/32 #VPN
-  - 104.208.28.4/32 #APIM DEV
-  - 104.43.253.6/32 #APIM TST
-  - 40.86.97.122/32 #APIM STG
-  - 23.99.136.139/32 #APIM PROD
-  - 20.96.112.192/32 #APIM PROD
+
+datalake_account_name: "dlsfimappdevcusdataauto"
+datalake_mktg_integrations_folder_path: "raw/mktg/dev/integrations/"
+datalake_flowapi_folder: "flowapi"
+datalake_mailchimp_folder: "mailchimp"
+datalake_totalexpert_folder: "totalexpert"
+datalake_workfront_folder: "workfront"
+mailchimp_api_base_url: "https://us12.api.mailchimp.com/3.0"
+mailchimp_list_id: "fa3d2642fe"
+mailchimp_operation_id: "fairway_adf_batch_update"
+mailchimp_email_error_to: "chandra.mandadi@fairwaymc.com"
+mailchimp_email_error_subject: "Fairway Prod Environment | Workday To Mailchimp Sync - Error"
+mailchimp_email_report_to: "chandra.mandadi@fairwaymc.com,ben.smidt@fairwaymc.com,ryanj@fairwaymc.com"
+mailchimp_email_report_from: "no-reply@fairwaymc.com"
+mailchimp_email_report_subject: "Fairway Prod Environment | Workday To Mailchimp Sync"
+inactive_users_days_ago: "30"
+workfront_email_error_to: "chandra.mandadi@fairwaymc.com"
+workfront_email_error_subject: "Fairway Prod Environment | Workday To Workfront Sync - Error"
+workfront_email_report_to: "chandra.mandadi@fairwaymc.com,rhonda.triggs@fairwaymc.com"
+workfront_email_report_from: "no-reply@fairwaymc.com"
+workfront_email_report_subject: "Fairway Prod Environment | Workday To Workfront Sync"
+totalexpert_email_error_to: "chandra.mandadi@fairwaymc.com"
+totalexpert_email_error_subject: "Fairway Prod Environment | Workday To TotalExpert Sync - Error"
+totalexpert_email_report_to: "chandra.mandadi@fairwaymc.com,marketingonboarding@fairwaymc.com,sarahk@fairwaymc.com"
+totalexpert_email_report_from: "no-reply@fairwaymc.com"
+totalexpert_email_report_subject: "Fairway Prod Environment | Workday To TotalExpert Sync"
+webdata_url: "https://fairway-api-access.s3.amazonaws.com/js/tmp/webflow_data_sync/new_flow/fairway-flow-data-withweb.json"
+
+fn_kind: elastic
+fn_tier: ElasticPremium
+fn_size: EP1
+pre_warmed_instance_count: 3
+asp_reserved: false
+os_type:
+function_timeout: -1
+elastic_instance_minimum:

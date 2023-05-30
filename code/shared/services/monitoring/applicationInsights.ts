@@ -1,14 +1,10 @@
 import * as appInsights from "applicationinsights";
 import { Context } from "@azure/functions";
 import { ConfigBase } from "../serviceBase";
-import { TYPES } from "../../inversify/types";
-import { AppConfigService } from "../appConfiguration/appConfig.service";
 
 export class AppInsightsService extends ConfigBase {
-    private readonly appConfigService = this.resolve<AppConfigService>(TYPES.AppConfigService);
-
     public async StartService(context: Context, functionName: string) {
-        const env = this.appConfigService.getConfiguration("environment");
+        const env = process.env["environment"] || "local";
         if (env !== "unittest" && env !== "local") {
             try {
                 const appInsightsKey = process.env["APPINSIGHTS_INSTRUMENTATIONKEY"];

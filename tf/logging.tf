@@ -3,27 +3,34 @@ data "azurerm_log_analytics_workspace" "main" {
   resource_group_name = local.settings.log_analytics_rg
 }
 
-resource "azurerm_monitor_diagnostic_setting" "keyvault_monitoring" {
+data "azurerm_monitor_diagnostic_categories" "function_monitoring" {
+  resource_id = azurerm_windows_function_app.service-name.id
+}
+
+resource "azurerm_monitor_diagnostic_setting" "function_monitoring" {
   name                       = "LogAnalytics-Diagnostics"
-  target_resource_id         = azurerm_key_vault.keyVault.id
+  target_resource_id         = azurerm_windows_function_app.service-name.id
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.main.id
-
-  log {
-    category = "AuditEvent"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-      days    = 90
+  dynamic "enabled_log" {
+    iterator = log_category
+    for_each = data.azurerm_monitor_diagnostic_categories.function_monitoring.log_category_types
+    content {
+      category = log_category.value
+      retention_policy {
+        days    = 90
+        enabled = true
+      }
     }
   }
-
-  metric {
-    category = "AllMetrics"
-
-    retention_policy {
-      enabled = true
-      days    = 90
+  dynamic "metric" {
+    iterator = metric_category
+    for_each = data.azurerm_monitor_diagnostic_categories.function_monitoring.metrics
+    content {
+      category = metric_category.value
+      retention_policy {
+        days    = 90
+        enabled = true
+      }
     }
   }
 }

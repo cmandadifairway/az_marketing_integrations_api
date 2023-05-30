@@ -32,13 +32,13 @@
                 tokenSuffix: "__"
             - task: TerraformInstaller@0
               inputs:
-                terraformVersion: ${{Parameters.tfversion}}
+                terraformVersion: $(tf_version)
             - script: |
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
                 terraform workspace select ${{Parameters.env}} || terraform workspace new ${{Parameters.env}}
                 terraform init -backend-config="storage_account_name=$(AZDO--BACKEND--STORAGEACCT)" -backend-config="access_key=$(AZDO--BACKEND--ACCESSKEY)"
-                terraform plan -var client_secret="$(AZDO--SUB--CS)"
-                terraform apply -var client_secret="$(AZDO--SUB--CS)" -auto-approve
+                terraform plan -var client_secret="$(AZDO--SUB--CS)" -out=tfplan
+                terraform apply -auto-approve tfplan
               workingDirectory: '$(System.ArtifactsDirectory)/tf'
               displayName: "Terraform Init & Apply"
             - task: raul-arrieta.terraform-outputs.terraform-outputs.terraform-outputs@0
@@ -49,10 +49,10 @@
             - task: DownloadBuildArtifacts@0
               inputs:
                 downloadType: 'single'
-                artifactName: '${{Parameters.servicename}}'
+                artifactName: '$(servicename)'
                 targetPath: '$(System.ArtifactsDirectory)'
             - task: AzureFunctionApp@1
-              displayName: "Azure Function App Deploy: ${{Parameters.servicename}}"
+              displayName: "Azure Function App Deploy: $(servicename)"
               inputs:
                 azureSubscription: "${{Parameters.svc_conn}}"
                 appType: functionApp
@@ -60,5 +60,18 @@
                 #Uncomment the next lines to deploy to a deployment slot
                 #deployToSlotOrASE: true
                 #slotName: '<Slot name>'
-                #resourceGroupName: '$(OP_FUNCAPPRG_NAME)'
+                resourceGroupName: '$(OP_FUNCAPPRG_NAME)'
                 package: "$(System.ArtifactsDirectory)/**/*.zip"
+            - task: PowerShell@2
+              condition: and(succeeded(), eq('${{parameters.env}}', 'prd'))
+              displayName: Tag Branch on Production Release
+              inputs:
+                targetType: 'inline'
+                pwsh: true
+                script: |
+                  $date = Get-Date
+                  git config --global user.email "cicd-admins@fairwaymc.com"
+                  git config --global user.name "Fairway CI/CD Automation"
+                  git tag -a "$(Build.BuildNumber)" -m "Deployed to Production on $($date)"  HEAD
+                  git push --tags
+                  git tag -n

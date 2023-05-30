@@ -4,7 +4,7 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc -w",
-        "prestart": "npm run pretty && npm run build",
+        "prestart": "npm run build",
         "start": "func start",
         "webpack-dev": "webpack --watch --env=dev",
         "dev": "run-p webpack-dev start",
@@ -27,7 +27,7 @@
         "ts-jest": "27.0.7",
         "ts-loader": "9.2.6",
         "typescript": "4.4.4",
-        "webpack": "5.60.0",
+        "webpack": "^5.81.0",
         "webpack-cli": "4.9.1"
     },
     "dependencies": {
@@ -36,14 +36,19 @@
         "@azure/identity": "2.0.0",
         "@azure/keyvault-secrets": "4.3.0",
         "@azure/storage-blob": "12.7.0",
+        "@azure/storage-file-datalake": "^12.13.0",
+        "@sendgrid/mail": "^7.7.0",
         "applicationinsights": "2.2.0",
+        "axios": "^1.4.0",
         "class-transformer": "0.4.0",
-        "class-validator": "0.13.1",
-        "express": "4.17.1",
+        "class-validator": "^0.14.0",
+        "express": "^4.18.2",
+        "form-data": "^4.0.0",
         "inversify": "6.0.1",
+        "lodash": "^4.17.21",
         "mongodb": "4.1.1",
         "mongodb-client-encryption": "1.2.6",
-        "node-fetch": "3.0.0",
+        "node-fetch": "^3.3.1",
         "reflect-metadata": "0.1.13",
         "util": "0.12.4"
     }

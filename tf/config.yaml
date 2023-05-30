@@ -1,10 +1,14 @@
 ﻿
 subscipt: infapp
-service: ffadmin
+service: service-name
 default_tags:
-  service-product: Fairway First Admin API
-  costcenter: 1151
+  service-product: Function Application
+  costcenter: 1070
   data-classification: Private
-  Owner-email: jessica.manna@fairwaymc.com
+  Owner-email: username@fairwaymc.com
   pid: n/a
   Expiration: n/a
+asp_sku: Y1
+app_stack:
+  - stack: node
+    node_version: "~18"

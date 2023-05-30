@@ -10,7 +10,7 @@ trigger:
     exclude:
     - README.md
     - tf/README.md
-  batch: 'true'
+  batch: true
 resources:
   repositories:
     - repository: templates
@@ -18,9 +18,9 @@ resources:
       name: fairwayindependentmc/azdo-yaml-templates
       endpoint: BitbucketCloud
 variables:
-  servicename: 'service-name'
+  servicename: 'flowdc'
   tf_version: '1.2.3'
-  node_version: '18.12.1'
+  node_version: '14.20.0'
 stages:
 - stage: securityscan
   displayName: Run Security Scans
@@ -29,7 +29,7 @@ stages:
     parameters:
       snyk_threshold: 'high'
       snyk_fail: true
-      node_version: 18.12.1
+      node_version: 14.20.0
       npm_command: ci
 - stage: build
   displayName: Build, Analyze, and Publish Artifacts
@@ -37,9 +37,8 @@ stages:
   - template: templates/build-job.yaml
     parameters:
       npm_command: ci
-- stage: Release_Development
-  displayName: Release To Development
-  dependsOn: build
+- stage: Release_Dev
+  dependsOn: Build
   condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/master')))
   jobs:
   - template: templates/deploy.yaml
@@ -48,9 +47,28 @@ stages:
       svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
       env: dev
       group: InfraVar-Dev
-- stage: Release_Production
-  displayName: Release To Production
-  dependsOn: Release_Development
+- stage: Release_Tst
+  dependsOn: Release_Dev
+  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/develop'), eq(variables['build.sourceBranch'], 'refs/heads/master')))
+  jobs:
+  - template: templates/deploy.yaml
+    parameters:
+      job_name: Deploy_Tst
+      svc_conn: 'IT Infrastructure Apps Dev (6213e05a-d0ed-4bcb-8ba9-e7c32d78b201)'
+      env: tst
+      group: InfraVar-Dev
+# - stage: Release_Stage
+#   dependsOn: Release_Tst
+#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+#   jobs:
+#     - template: templates/deploy.yaml
+#       parameters:
+#         job_name: Deploy_Stg
+#         svc_conn: 'IT Infrastructure Apps Prod (a7b1e7e0-020d-44d1-b0b9-759379b7cbfc)'
+#         env: stg
+#         group: InfraVar-Prd
+- stage: Release_Prd_Cus
+  dependsOn: Release_Tst
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
     - template: templates/deploy.yaml

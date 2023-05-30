@@ -4,14 +4,7 @@ export class BaseError extends Error {
     private requestId: string;
     private readonly errorMessage: string;
 
-    constructor(
-        error: Error,
-        name?: string,
-        statusCode?: number,
-        message?: string,
-        requestId?: string,
-        description?: unknown
-    ) {
+    constructor(error: Error, name?: string, statusCode?: number, message?: string, requestId?: string, description?: unknown) {
         if (!message) {
             message = error.message;
         }

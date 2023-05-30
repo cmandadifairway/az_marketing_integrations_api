@@ -17,7 +17,7 @@ jobs:
         artifactName: 'tf'
     - task: NodeTool@0
       inputs:
-        versionSpec: 12.13.1
+        versionSpec: $(node_version)
     - task: Cache@2
       displayName: Cache npm
       inputs:
@@ -69,7 +69,7 @@ jobs:
           sonar.language=js
           sonar.projectKey=$(Build.Repository.Name)
           sonar.profile=Infosec way Recommended
-          sonar.exclusions=node_modules/**/*,code/testing/**/*, **/*spec.ts, **/webpack*js, **/*config.js
+          sonar.exclusions=node_modules/**/*, **/testing/**/*, **/coverage/**/*, **/*spec.ts, **/webpack*js, **/*config.js
           sonar.javascript.lcov.reportPaths=code/coverage/lcov.info
         workingDirectory: '$(Build.SourcesDirectory)'
     - task: SonarCloudAnalyze@1
@@ -83,15 +83,6 @@ jobs:
       inputs:
         SonarCloud: 'Sonarcloud'
         organization: 'fairwaymtg'
-    # - task: Snyk.snyk-security-scan.custom-build-release-task.SnykSecurityScan@0
-    #   displayName: 'Snyk scan for open source vulnerabilities'
-    #   inputs:
-    #     serviceConnectionEndpoint: Snyk
-    #     targetFile: '$(Build.SourcesDirectory)/code/package.json'
-    #     projectName: '$(Build.Repository.Name)'
-    #     organization: 'fairway-independent-mortgage-corporation'
-    #     failOnIssues: true
-    #     additionalArguments: -d --policy-path=$(Build.SourcesDirectory)/.snyk
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.SourcesDirectory)/code/dist/'
@@ -104,7 +95,7 @@ jobs:
       displayName: 'Publish Artifact'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/webpack/'
-        ArtifactName: ${{Parameters.servicename}}
+        ArtifactName: $(servicename)
       condition: succeededOrFailed()
     - task: ArtifactoryGenericUpload@1
       inputs:
@@ -115,7 +106,7 @@ jobs:
             "files": [
               {
                 "pattern": "$(Build.ArtifactStagingDirectory)/webpack/$(Build.BuildNumber).zip",
-                "target": "npm-local/${{Parameters.servicename}}/"
+                "target": "npm-local/$(servicename)/"
               }
             ]
           }
@@ -125,7 +116,7 @@ jobs:
         failNoOp: true
     - task: ArtifactoryPublishBuildInfo@1
       inputs:
-        artifactoryService: ${{parameters.artifactory_endpoint}}
+        artifactoryService: Artifactory
         buildName: '$(Build.DefinitionName)'
         buildNumber: '$(Build.BuildNumber)'
     - task: JFrog.jfrog-artifactory-vsts-extension.artifactory-xray-scan-task.ArtifactoryXrayScan@1

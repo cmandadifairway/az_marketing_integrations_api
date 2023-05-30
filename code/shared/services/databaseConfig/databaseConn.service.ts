@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
-import { KeyVaultService } from "../keyVault/keyVault.service";
 import { TYPES } from "../../inversify/types";
+import { KeyVaultService } from "../keyVault/keyVault.service";
 import { ServiceBase } from "../serviceBase";
 
 // Ensure the client is instantiated once

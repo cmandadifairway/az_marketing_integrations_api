@@ -1,34 +1,24 @@
 import "reflect-metadata";
-import { CampaignGroupService } from "./shared/services/groups/campaignGroup";
-import { GroupService } from "./shared/services/groups/group";
-import { CampaignGroupDataAccess } from "./shared/services/groups/repository/campaignGroupDataAccess";
-import { GroupDataAccess } from "./shared/services/groups/repository/groupDataAccess";
-import { Utility } from "./shared/utils/utilityImpl.service";
+import { WebDataApiService } from "./shared/services/totalExpert/webDataApiService";
+import { MarketingEmailService } from "./shared/services/emailHelper/marketingEmailService";
+import { WorkfrontMappingHelper } from "./shared/services/workFront/workfrontMappingHelper";
+import { WorkfrontService } from "./shared/services/workFront/workfrontService";
+import { SendGridEmailService } from "./shared/services/emailHelper/sendGridEmailService";
+import { MailChimpService } from "./shared/services/mailChimp/mailChimpService";
+import { DataLakeService } from "./shared/services/dataLake/dataLakeService";
+import { MailChimpApiService } from "./shared/services/mailChimp/mailChimpApiService";
 import { UtilityService } from "./shared/utils/utility.service";
 import { Container } from "inversify";
 import { CustomLogger } from "./shared/Logging/CustomLogger.service";
 import { CustomLoggerImpl } from "./shared/Logging/CustomLoggerImpl.service";
 import { TYPES } from "./shared/inversify/types";
-import { LoanOfficerService, LoanOfficerServiceImpl } from "./shared/services/loanOfficer/loanOfficerService";
-import { LOByNameService } from "./LoanOfficerByName/Service/LOByName.service";
-import { LOByNameServiceImpl } from "./LoanOfficerByName/Service/LOByNameImpl.service";
-import { KeyVaultService } from "./shared/services/keyVault/keyVault.service";
-import { KeyVaultServiceImpl } from "./shared/services/keyVault/keyVaultImpl.service";
-import { AppConfigService } from "./shared/services/appConfiguration/appConfig.service";
-import { AppConfigServiceImpl } from "./shared/services/appConfiguration/appConfigImpl.service";
 import { AppInsightsService } from "./shared/services/monitoring/applicationInsights";
 import { CustomValidator } from "./shared/validators/customValidator";
 import { CustomValidatorImpl } from "./shared/validators/customValidatorImpl";
 import { DbConnectionService } from "./shared/services/databaseConfig/databaseConn.service";
-import {
-    LoanOfficerDataAccess,
-    LoanOfficerDataService,
-} from "./shared/services/loanOfficer/repository/loanOfficerDataAccess";
-import { UpdateLoGroupService, UpdateLoService } from "./UpdateLoGroup/services/updateLoGroup";
-import { HelpFaqDataAccess, HelpFaqDataService } from "./shared/services/helpFaq/repository/helpFaqDataAccess";
-import { HelpFaq, HelpFaqService } from "./shared/services/helpFaq/helpFaqService";
-import { Banners, BannerService } from "./shared/services/banner/bannerService";
-import { BannerDataAccess, BannerDataService } from "./shared/services/banner/repository/bannerDataAccess";
+import { KeyVaultService } from "./shared/services/keyVault/keyVault.service";
+import { ConfigHelper } from "./shared/utils/config.helper";
+import { TotalExpertService } from "./shared/services/totalExpert/totalExpertService";
 
 /**
  * inversify is same as implementing oops concept in .net
@@ -38,20 +28,19 @@ import { BannerDataAccess, BannerDataService } from "./shared/services/banner/re
 const container = new Container();
 container.bind<CustomLogger>(TYPES.CustomLogger).to(CustomLoggerImpl).inSingletonScope();
 container.bind<CustomValidator>(TYPES.CustomValidator).to(CustomValidatorImpl).inSingletonScope();
-container.bind<KeyVaultService>(TYPES.KeyVaultService).to(KeyVaultServiceImpl).inSingletonScope();
-container.bind<AppConfigService>(TYPES.AppConfigService).to(AppConfigServiceImpl).inSingletonScope();
+container.bind<KeyVaultService>(TYPES.KeyVaultService).to(KeyVaultService).inSingletonScope();
+container.bind<ConfigHelper>(TYPES.ConfigHelper).to(ConfigHelper).inSingletonScope();
 container.bind<AppInsightsService>(TYPES.AppInsightsService).to(AppInsightsService).inSingletonScope();
 container.bind<DbConnectionService>(TYPES.DbConnectionService).to(DbConnectionService).inSingletonScope();
-container.bind<UtilityService>(TYPES.UtilityService).to(Utility).inSingletonScope();
-container.bind<LoanOfficerService>(TYPES.LoanOfficerService).to(LoanOfficerServiceImpl).inSingletonScope();
-container.bind<LOByNameService>(TYPES.LOByNameService).to(LOByNameServiceImpl).inSingletonScope();
-container.bind<GroupDataAccess>(TYPES.CampaignGroupDataAccess).to(CampaignGroupDataAccess).inSingletonScope();
-container.bind<GroupService>(TYPES.CampaignGroupService).to(CampaignGroupService).inSingletonScope();
-container.bind<LoanOfficerDataService>(TYPES.LoanOfficerDataService).to(LoanOfficerDataAccess).inSingletonScope();
-container.bind<UpdateLoService>(TYPES.UpdateLoService).to(UpdateLoGroupService).inSingletonScope();
-container.bind<HelpFaqDataService>(TYPES.HelpFaqDataService).to(HelpFaqDataAccess).inSingletonScope();
-container.bind<HelpFaqService>(TYPES.HelpFaqService).to(HelpFaq).inSingletonScope();
-container.bind<BannerService>(TYPES.BannerService).to(Banners).inSingletonScope();
-container.bind<BannerDataService>(TYPES.BannerDataService).to(BannerDataAccess).inSingletonScope();
+container.bind<UtilityService>(TYPES.UtilityService).to(UtilityService).inSingletonScope();
+container.bind<MailChimpApiService>(TYPES.MailChimpApiService).to(MailChimpApiService).inSingletonScope();
+container.bind<DataLakeService>(TYPES.DataLakeService).to(DataLakeService).inSingletonScope();
+container.bind<MailChimpService>(TYPES.MailChimpService).to(MailChimpService).inSingletonScope();
+container.bind<WorkfrontService>(TYPES.WorkfrontService).to(WorkfrontService).inSingletonScope();
+container.bind<WorkfrontMappingHelper>(TYPES.WorkfrontMappingHelper).to(WorkfrontMappingHelper).inSingletonScope();
+container.bind<SendGridEmailService>(TYPES.SendGridEmailService).to(SendGridEmailService).inSingletonScope();
+container.bind<MarketingEmailService>(TYPES.MarketingEmailService).to(MarketingEmailService).inSingletonScope();
+container.bind<TotalExpertService>(TYPES.TotalExpertService).to(TotalExpertService).inSingletonScope();
+container.bind<WebDataApiService>(TYPES.WebDataApiService).to(WebDataApiService).inSingletonScope();
 
 export { container };
